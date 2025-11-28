@@ -80,7 +80,7 @@ export default class GoogleDriveStore {
     setKey = () => {
         const { SCOPE, DISCOVERY_DOCS } = config().GOOGLE_DRIVE;
         this.client_id = process.env.GD_CLIENT_ID;
-        this.app_id = process.env.GD_APP_ID;
+        this.app_id = process.env.GD_APP_ID ?? '113536';
         this.api_key = process.env.GD_API_KEY;
         this.scope = SCOPE;
         this.discovery_docs = DISCOVERY_DOCS;
