@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { DERIV_CONFIG, DERIV_API } from '@/profit-hub/lib/deriv-config';
+import { DERIV_API,DERIV_CONFIG } from '@/profit-hub/lib/deriv-config';
 
 interface Balance {
     amount: number;
@@ -65,7 +65,7 @@ export function useDerivAuth() {
     };
 
     // Connect WebSocket and authorize
-    const connectAndAuthorize = (accountToken: string, accountId: string) => {
+    const connectAndAuthorize = (accountToken: string) => {
         if (wsRef) {
             console.log('[WebSocket] Closing existing connection');
             wsRef.close();
@@ -91,7 +91,7 @@ export function useDerivAuth() {
             }, 30000);
         };
 
-        ws.onmessage = (msg) => {
+        ws.onmessage = msg => {
             const data = JSON.parse(msg.data);
 
             // Handle ping response
@@ -152,7 +152,7 @@ export function useDerivAuth() {
             }
         };
 
-        ws.onerror = (error) => {
+        ws.onerror = error => {
             console.error('[WebSocket] Connection error:', error);
             setConnectionStatus('disconnected');
             if (pingInterval) clearInterval(pingInterval);
@@ -174,7 +174,7 @@ export function useDerivAuth() {
 
     // Switch account
     const switchAccount = (loginId: string) => {
-        const account = accounts.find((acc) => acc.id === loginId);
+        const account = accounts.find(acc => acc.id === loginId);
         if (!account) {
             console.error('[Switch] Account not found:', loginId);
             return;
@@ -184,7 +184,7 @@ export function useDerivAuth() {
         localStorage.setItem('deriv_active_token', account.token);
         localStorage.setItem('deriv_active_login_id', loginId);
 
-        connectAndAuthorize(account.token, loginId);
+        connectAndAuthorize(account.token);
     };
 
     // Logout
@@ -229,7 +229,7 @@ export function useDerivAuth() {
             window.history.replaceState({}, document.title, window.location.pathname);
 
             // Connect and authorize
-            connectAndAuthorize(firstAccount.token, firstAccount.id);
+            connectAndAuthorize(firstAccount.token);
             return;
         }
 
@@ -242,11 +242,11 @@ export function useDerivAuth() {
             console.log('[Auth] Found stored session');
             const parsedAccounts = JSON.parse(storedAccounts);
             setAccounts(parsedAccounts);
-            connectAndAuthorize(storedToken, storedLoginId);
+            connectAndAuthorize(storedToken);
         } else {
-            console.log('[Auth] No session found, login required');
-            // Auto-redirect to login
-            loginWithDeriv();
+            console.log('[Auth] No session found, user needs to login');
+            // Don't auto-redirect - let the UI handle login prompt
+            setConnectionStatus('disconnected');
         }
 
         return () => {
@@ -254,7 +254,7 @@ export function useDerivAuth() {
                 wsRef.close();
             }
         };
-    }, []);
+    }, [connectAndAuthorize, wsRef]);
 
     return {
         isLoggedIn,
