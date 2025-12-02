@@ -4,7 +4,7 @@
  */
 
 // Single App ID for all environments (production)
-export const DERIV_APP_ID = 113536;
+export const DERIV_APP_ID = 106629;
 
 // Get current page URL for OAuth redirect
 export const DERIV_REDIRECT_URL = typeof window !== 'undefined' ? window.location.origin : '';
@@ -46,4 +46,3 @@ export const DERIV_REPOS = {
         description: 'Official Deriv WebSocket API SDK',
     },
 } as const;
-

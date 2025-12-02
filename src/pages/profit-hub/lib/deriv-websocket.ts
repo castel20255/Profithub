@@ -11,7 +11,7 @@ export class DerivWebSocket {
     private appId: string;
 
     constructor(appId?: string | number, token?: string) {
-        this.appId = appId ? String(appId) : '113536';
+        this.appId = appId ? String(appId) : '106629';
         this.token = token || null;
     }
 

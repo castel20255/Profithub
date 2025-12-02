@@ -497,12 +497,13 @@ export function SpeedBot({
                             {ticksPerSecond} ticks/sec
                         </Badge>
                         <Badge
-                            className={`${botStatus === 'Idle'
-                                ? 'bg-gray-500/20 text-gray-400'
-                                : botStatus.includes('Running')
-                                    ? 'bg-purple-500/20 text-purple-400 animate-pulse'
-                                    : 'bg-yellow-500/20 text-yellow-400'
-                                }`}
+                            className={`${
+                                botStatus === 'Idle'
+                                    ? 'bg-gray-500/20 text-gray-400'
+                                    : botStatus.includes('Running')
+                                      ? 'bg-purple-500/20 text-purple-400 animate-pulse'
+                                      : 'bg-yellow-500/20 text-yellow-400'
+                            }`}
                         >
                             {botStatus}
                         </Badge>
@@ -523,8 +524,9 @@ export function SpeedBot({
                             last15Digits.map((digit, i) => (
                                 <span
                                     key={i}
-                                    className={`w-7 h-7 flex items-center justify-center rounded text-xs font-bold ${i === 0 ? 'ring-2 ring-yellow-400' : ''
-                                        } ${digit % 2 === 0 ? 'bg-green-500/20 text-green-400' : 'bg-blue-500/20 text-blue-400'}`}
+                                    className={`w-7 h-7 flex items-center justify-center rounded text-xs font-bold ${
+                                        i === 0 ? 'ring-2 ring-yellow-400' : ''
+                                    } ${digit % 2 === 0 ? 'bg-green-500/20 text-green-400' : 'bg-blue-500/20 text-blue-400'}`}
                                 >
                                     {digit}
                                 </span>

@@ -95,7 +95,7 @@ export default class FreeBotStore {
             await new Promise(resolve => setTimeout(resolve, 500));
 
             const blocklyWorkspace = (window as any).Blockly?.derivWorkspace;
-            
+
             if (!blocklyWorkspace) {
                 console.error('Blockly workspace not found. Cannot load bot strategy.');
                 throw new Error('Blockly workspace not initialized');

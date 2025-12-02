@@ -233,12 +233,13 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
                         {steps.map(step => (
                             <div
                                 key={step.id}
-                                className={`flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-xl transition-all duration-300 ${step.status === 'loading'
+                                className={`flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-xl transition-all duration-300 ${
+                                    step.status === 'loading'
                                         ? 'bg-emerald-500/10 border border-emerald-500/30 shadow-lg shadow-emerald-500/10'
                                         : step.status === 'complete'
-                                            ? 'bg-emerald-500/5 border border-emerald-500/20'
-                                            : 'bg-slate-800/30 border border-slate-700/30'
-                                    }`}
+                                          ? 'bg-emerald-500/5 border border-emerald-500/20'
+                                          : 'bg-slate-800/30 border border-slate-700/30'
+                                }`}
                             >
                                 <div className='flex-shrink-0'>
                                     {step.status === 'complete' ? (
@@ -251,12 +252,13 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
                                 </div>
                                 <div className='flex-1 min-w-0'>
                                     <p
-                                        className={`text-xs sm:text-sm font-medium truncate ${step.status === 'loading'
+                                        className={`text-xs sm:text-sm font-medium truncate ${
+                                            step.status === 'loading'
                                                 ? 'text-emerald-400'
                                                 : step.status === 'complete'
-                                                    ? 'text-gray-400'
-                                                    : 'text-gray-500'
-                                            }`}
+                                                  ? 'text-gray-400'
+                                                  : 'text-gray-500'
+                                        }`}
                                     >
                                         {step.label}
                                     </p>

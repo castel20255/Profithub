@@ -2,7 +2,7 @@
 
 import { extractLastDigit } from '@/lib/deriv-markets';
 
-const APP_ID = '113536';
+const APP_ID = '106629';
 
 type MessageHandler = (message: any) => void;
 

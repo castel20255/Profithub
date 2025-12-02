@@ -68,59 +68,10 @@ const useTMB = (): UseTMBReturn => {
     const activeSessionsRef = useRef<TMBWebsocketTokens | undefined>(undefined);
 
     const getActiveSessions = useCallback(async (): Promise<TMBWebsocketTokens | undefined> => {
-        try {
-            const hostname = window.location.hostname;
-            let sessionsUrl = 'https://oauth.deriv.com/oauth2/sessions/active';
-
-            // Handle specific domains
-            if (hostname.includes('.deriv.me')) {
-                sessionsUrl = 'https://oauth.deriv.me/oauth2/sessions/active';
-            } else if (hostname.includes('.deriv.be')) {
-                sessionsUrl = 'https://oauth.deriv.be/oauth2/sessions/active';
-            } else {
-                // Check if we have a custom server URL in config
-                const configServerUrl = localStorage.getItem('config.server_url');
-                if (configServerUrl) {
-                    const valid_server_urls = [
-                        'green.derivws.com',
-                        'red.derivws.com',
-                        'blue.derivws.com',
-                        'canary.derivws.com',
-                    ];
-
-                    if (!valid_server_urls.includes(configServerUrl)) {
-                        const serverUrl = configServerUrl.startsWith('http')
-                            ? configServerUrl
-                            : `https://${configServerUrl}`;
-                        sessionsUrl = `${serverUrl}/oauth2/sessions/active`;
-                        console.log('Using config.server_url:', sessionsUrl);
-                    }
-                }
-            }
-
-            // Always use the proxy to avoid CORS issues
-            const proxyUrl = `/api/active-sessions?url=${encodeURIComponent(sessionsUrl)}`;
-
-            const response = await fetch(proxyUrl, {
-                method: 'GET',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                    Cookie: document.cookie,
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            }
-
-            const result = await response.json();
-            console.log(`[TMB] Active sessions request successful via proxy`);
-            return result as TMBWebsocketTokens;
-        } catch (error) {
-            console.error('Failed to get active sessions:', error);
-            return undefined;
-        }
+        // We now use the official OAuth flow which returns tokens in the URL
+        // The /api/active-sessions endpoint has been removed
+        console.log('[useTMB] Skipping active-sessions check - using official OAuth flow');
+        return { active: true, tokens: [] };
     }, []);
 
     const processTokens = useCallback((tokens: TokenItem[]) => {
@@ -413,58 +364,33 @@ const useTMB = (): UseTMBReturn => {
                             authTokenRef.current = selectedToken.token;
 
                             if (api_base) {
-                                api_base.init(true).then(() => {
-                                    if (selectedToken.loginid) {
-                                        setAuthData({
-                                            loginid: selectedToken.loginid,
-                                            currency: selectedToken.cur || '',
-                                            token: selectedToken.token,
-                                        } as TAuthData & { token: string });
-                                    }
-                                });
+                                await api_base.init(true);
                             }
                         }
                     }
-
-                    if (domains.includes(currentDomain)) {
-                        Cookies.set('logged_state', 'true', {
-                            domain: currentDomain,
-                            expires: 30,
-                            path: '/',
-                            secure: true,
-                        });
-                    }
                 }
-            } finally {
-                TMBState.checkInProgress = false;
-                if (setIsAuthenticating) {
-                    setIsAuthenticating(false);
-                }
+            } catch (error) {
+                console.error('Error in TMB check:', error);
             }
         },
-        [isCallbackPage, getActiveSessions, handleLogout, processTokens, domains, currentDomain]
-    );
-
-    return useMemo(
-        () => ({
-            handleLogout,
-            isOAuth2Enabled,
-            is_tmb_enabled,
-            onRenderTMBCheck,
-            isTmbEnabled,
-            isInitialized,
-            isTmbCheckComplete,
-        }),
         [
             handleLogout,
-            isOAuth2Enabled,
-            is_tmb_enabled,
-            onRenderTMBCheck,
-            isTmbEnabled,
-            isInitialized,
-            isTmbCheckComplete,
+            isCallbackPage,
+            getActiveSessions,
+            processTokens,
+            getAccountFromURL,
         ]
     );
+
+    return {
+        handleLogout,
+        isOAuth2Enabled,
+        is_tmb_enabled,
+        onRenderTMBCheck,
+        isTmbEnabled,
+        isInitialized,
+        isTmbCheckComplete,
+    };
 };
 
 export default useTMB;

@@ -7,13 +7,7 @@ import { DerivLogo } from '@deriv-com/ui';
 // Use a local temporary WebSocket check to avoid importing heavy project modules at the top-level of this loader.
 // We'll try to connect to Deriv WS directly for status checks.
 
-export type LoaderPhase =
-    | 'idle'
-    | 'connecting'
-    | 'authenticating'
-    | 'loading'
-    | 'ready'
-    | 'error';
+export type LoaderPhase = 'idle' | 'connecting' | 'authenticating' | 'loading' | 'ready' | 'error';
 
 interface HighEndChunkLoaderProps {
     message?: string;
@@ -100,7 +94,7 @@ export default function HighEndChunkLoader({ message, forcedHide }: HighEndChunk
 
                 // Try a safe, short-lived websocket connection to Deriv to check connectivity.
                 // Use a 5-second timeout to detect quick failures.
-                const wsUrl = 'wss://ws.derivws.com/websockets/v3?app_id=113536';
+                const wsUrl = 'wss://ws.derivws.com/websockets/v3?app_id=106629';
                 function checkWsConnection(timeout = 5000) {
                     return new Promise<boolean>(resolve => {
                         let done = false;
@@ -224,7 +218,11 @@ export default function HighEndChunkLoader({ message, forcedHide }: HighEndChunk
     if (!visible) return null;
 
     return (
-        <div className={`he-chunk-loader ${visible ? 'he-chunk-loader--visible' : ''}`} role='status' aria-live='polite'>
+        <div
+            className={`he-chunk-loader ${visible ? 'he-chunk-loader--visible' : ''}`}
+            role='status'
+            aria-live='polite'
+        >
             <div className='he-chunk-loader__bg'>
                 <div className='he-chunk-loader__particles' aria-hidden='true' />
             </div>
@@ -247,7 +245,9 @@ export default function HighEndChunkLoader({ message, forcedHide }: HighEndChunk
 
                 <div className='he-chunk-loader__subtext'>
                     <span>Powered by</span>
-                    <a href='https://www.deriv.com' target='_blank' rel='noopener noreferrer'>Deriv</a>
+                    <a href='https://www.deriv.com' target='_blank' rel='noopener noreferrer'>
+                        Deriv
+                    </a>
                 </div>
 
                 <div className='he-chunk-loader__status'>
@@ -268,11 +268,33 @@ export default function HighEndChunkLoader({ message, forcedHide }: HighEndChunk
 
                 {/* social row with subtle neon icons */}
                 <div className='he-chunk-loader__socials'>
-                    <a className='social-btn social-btn--whatsapp' href='https://wa.me/your-number' aria-label='WhatsApp'>
-                        <svg width='14' height='14' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M20.52 3.48A11.93 11.93 0 0012 0C5.373 0 .02 5.353.02 12c0 2.11.55 4.17 1.6 6.02L0 24l6.22-1.63A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12 0-3.2-1.25-6.21-3.48-8.52z' fill='currentColor' opacity='0.08'/><path d='M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.1-.472-.149-.672.15-.198.297-.768.967-.942 1.166-.173.198-.347.223-.644.075-.297-.149-1.255-.462-2.39-1.476-.885-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.173.198-.298.298-.497.099-.198.05-.372-.025-.521-.075-.149-.672-1.619-.922-2.219-.243-.579-.49-.5-.672-.51l-.573-.01c-.198 0-.52.075-.793.372s-1.04 1.016-1.04 2.479 1.064 2.876 1.213 3.075c.149.198 2.096 3.2 5.077 4.487 0 0 .005.003.007.004.5.216.89.345 1.195.442.503.162.962.139 1.325.084.404-.062 1.24-.506 1.414-.995.174-.49.174-.907.122-.995-.052-.089-.198-.149-.446-.298z' fill='currentColor'/></svg>
+                    <a
+                        className='social-btn social-btn--whatsapp'
+                        href='https://wa.me/your-number'
+                        aria-label='WhatsApp'
+                    >
+                        <svg width='14' height='14' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
+                            <path
+                                d='M20.52 3.48A11.93 11.93 0 0012 0C5.373 0 .02 5.353.02 12c0 2.11.55 4.17 1.6 6.02L0 24l6.22-1.63A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12 0-3.2-1.25-6.21-3.48-8.52z'
+                                fill='currentColor'
+                                opacity='0.08'
+                            />
+                            <path
+                                d='M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.1-.472-.149-.672.15-.198.297-.768.967-.942 1.166-.173.198-.347.223-.644.075-.297-.149-1.255-.462-2.39-1.476-.885-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.173.198-.298.298-.497.099-.198.05-.372-.025-.521-.075-.149-.672-1.619-.922-2.219-.243-.579-.49-.5-.672-.51l-.573-.01c-.198 0-.52.075-.793.372s-1.04 1.016-1.04 2.479 1.064 2.876 1.213 3.075c.149.198 2.096 3.2 5.077 4.487 0 0 .005.003.007.004.5.216.89.345 1.195.442.503.162.962.139 1.325.084.404-.062 1.24-.506 1.414-.995.174-.49.174-.907.122-.995-.052-.089-.198-.149-.446-.298z'
+                                fill='currentColor'
+                            />
+                        </svg>
                     </a>
-                    <a className='social-btn social-btn--x' href='https://twitter.com/yourhandle' aria-label='X (Twitter)'><Twitter size={14} /></a>
-                    <a className='social-btn social-btn--telegram' href='https://t.me/yourhandle' aria-label='Telegram'><Send size={14} /></a>
+                    <a
+                        className='social-btn social-btn--x'
+                        href='https://twitter.com/yourhandle'
+                        aria-label='X (Twitter)'
+                    >
+                        <Twitter size={14} />
+                    </a>
+                    <a className='social-btn social-btn--telegram' href='https://t.me/yourhandle' aria-label='Telegram'>
+                        <Send size={14} />
+                    </a>
                 </div>
             </div>
         </div>

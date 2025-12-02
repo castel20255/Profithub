@@ -70,7 +70,11 @@ const FreeBotPage = observer(() => {
                                             </div>
                                         </div>
                                         <Button
-                                            text={loading_bot_id === strategy.id ? localize('Loading...') : localize('Load Bot')}
+                                            text={
+                                                loading_bot_id === strategy.id
+                                                    ? localize('Loading...')
+                                                    : localize('Load Bot')
+                                            }
                                             onClick={() => handleLoadBot(strategy)}
                                             primary
                                             has_effect
@@ -110,7 +114,11 @@ const FreeBotPage = observer(() => {
                                             </div>
                                         </div>
                                         <Button
-                                            text={loading_bot_id === strategy.id ? localize('Loading...') : localize('Load Bot')}
+                                            text={
+                                                loading_bot_id === strategy.id
+                                                    ? localize('Loading...')
+                                                    : localize('Load Bot')
+                                            }
                                             onClick={() => handleLoadBot(strategy)}
                                             primary
                                             has_effect

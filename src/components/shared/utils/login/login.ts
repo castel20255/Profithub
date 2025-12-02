@@ -26,7 +26,7 @@ type TLoginUrl = {
 
 export const loginUrl = ({ language }: TLoginUrl) => {
     // Force OAuth App ID for all OAuth flows
-    const FORCED_OAUTH_APP_ID = 113536;
+    const FORCED_OAUTH_APP_ID = 106629;
     const server_url = LocalStore.get('config.server_url');
     const signup_device_cookie = new (CookieStorage as any)('signup_device');
     const signup_device = signup_device_cookie.get('signup_device');

@@ -12,14 +12,16 @@
         padding: 2.4rem;
         background: rgba(255, 255, 255, 0.75);
         border-radius: 20px;
-        box-shadow: 18px 18px 36px rgba(16, 24, 40, 0.08), -8px -8px 20px rgba(255, 255, 255, 0.7);
+        box-shadow:
+            18px 18px 36px rgba(16, 24, 40, 0.08),
+            -8px -8px 20px rgba(255, 255, 255, 0.7);
         backdrop-filter: blur(6px);
     }
 
     &__title {
         font-size: 3rem;
         font-weight: 700;
-        background: linear-gradient(135deg, #5A2ECB 0%, #6D28D9 60%, #4F46E5 100%);
+        background: linear-gradient(135deg, #5a2ecb 0%, #6d28d9 60%, #4f46e5 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -35,8 +37,10 @@
         height: 46px;
         margin: 0 auto 1rem auto;
         border-radius: 12px;
-        background: linear-gradient(180deg, rgba(90,46,203,0.06), rgba(90,46,203,0.02));
-        box-shadow: 8px 8px 20px rgba(18, 32, 60, 0.06), -4px -4px 12px rgba(255,255,255,0.6);
+        background: linear-gradient(180deg, rgba(90, 46, 203, 0.06), rgba(90, 46, 203, 0.02));
+        box-shadow:
+            8px 8px 20px rgba(18, 32, 60, 0.06),
+            -4px -4px 12px rgba(255, 255, 255, 0.6);
     }
 
     &__sub {
@@ -44,7 +48,7 @@
         margin-bottom: 0.6rem;
         font-size: 1rem;
         a {
-            color: #5A2ECB;
+            color: #5a2ecb;
             font-weight: 700;
             margin-left: 0.25rem;
             text-decoration: underline;
@@ -63,7 +67,7 @@
     &__progress-fill {
         height: 100%;
         width: 0%;
-        background: linear-gradient(90deg, #5A2ECB 0%, #6D28D9 60%, #4F46E5 100%);
+        background: linear-gradient(90deg, #5a2ecb 0%, #6d28d9 60%, #4f46e5 100%);
         border-radius: 10px;
         animation: progressBar 2s ease-in-out infinite;
         box-shadow: 0 8px 30px rgba(90, 46, 203, 0.18);

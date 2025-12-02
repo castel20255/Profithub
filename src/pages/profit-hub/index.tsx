@@ -202,12 +202,13 @@ export default function DerivAnalysisApp() {
             )}
 
             <header
-                className={`border-b ${accountType === 'Real'
+                className={`border-b ${
+                    accountType === 'Real'
                         ? 'border-green-500/30 bg-gradient-to-r from-green-900/60 to-green-800/60 backdrop-blur-md'
                         : accountType === 'Demo'
-                            ? 'border-yellow-500/30 bg-gradient-to-r from-yellow-900/60 to-yellow-800/60 backdrop-blur-md'
-                            : 'border-blue-500/20 bg-[#0a0e27]/80 backdrop-blur-md'
-                    } sticky top-0 z-50 shadow-lg`}
+                          ? 'border-yellow-500/30 bg-gradient-to-r from-yellow-900/60 to-yellow-800/60 backdrop-blur-md'
+                          : 'border-blue-500/20 bg-[#0a0e27]/80 backdrop-blur-md'
+                } sticky top-0 z-50 shadow-lg`}
             >
                 <div className='w-full px-3 sm:px-4 md:px-6 py-3'>
                     <div className='flex items-center justify-between gap-2 sm:gap-4'>
@@ -233,10 +234,11 @@ export default function DerivAnalysisApp() {
                             )}
                             {/* Live streaming indicator */}
                             <Badge
-                                className={`text-xs px-2 py-1 ${connectionStatus === 'connected'
+                                className={`text-xs px-2 py-1 ${
+                                    connectionStatus === 'connected'
                                         ? 'bg-green-500/20 text-green-400 border-green-500/50'
                                         : 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50 animate-pulse'
-                                    }`}
+                                }`}
                             >
                                 <Activity className='h-3 w-3 mr-1 inline' />
                                 {connectionStatus === 'connected' ? 'LIVE' : 'Connecting...'}
@@ -357,10 +359,11 @@ export default function DerivAnalysisApp() {
                 {/* Stats Overview */}
                 <div className='grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mb-4 sm:mb-6'>
                     <div
-                        className={`p-3 sm:p-4 rounded-xl border ${theme === 'dark'
+                        className={`p-3 sm:p-4 rounded-xl border ${
+                            theme === 'dark'
                                 ? 'bg-gradient-to-br from-blue-900/30 to-cyan-900/20 border-blue-500/20'
                                 : 'bg-white border-gray-200 shadow-sm'
-                            }`}
+                        }`}
                     >
                         <div className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
                             Current Price
@@ -372,32 +375,35 @@ export default function DerivAnalysisApp() {
                         </div>
                     </div>
                     <div
-                        className={`p-3 sm:p-4 rounded-xl border ${theme === 'dark'
+                        className={`p-3 sm:p-4 rounded-xl border ${
+                            theme === 'dark'
                                 ? 'bg-gradient-to-br from-purple-900/30 to-pink-900/20 border-purple-500/20'
                                 : 'bg-white border-gray-200 shadow-sm'
-                            }`}
+                        }`}
                     >
                         <div className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
                             Last Digit
                         </div>
                         <div
-                            className={`text-2xl sm:text-3xl font-bold ${currentDigit !== null
+                            className={`text-2xl sm:text-3xl font-bold ${
+                                currentDigit !== null
                                     ? currentDigit % 2 === 0
                                         ? 'text-blue-400'
                                         : 'text-orange-400'
                                     : theme === 'dark'
-                                        ? 'text-gray-500'
-                                        : 'text-gray-400'
-                                }`}
+                                      ? 'text-gray-500'
+                                      : 'text-gray-400'
+                            }`}
                         >
                             {currentDigit !== null ? currentDigit : '-'}
                         </div>
                     </div>
                     <div
-                        className={`p-3 sm:p-4 rounded-xl border ${theme === 'dark'
+                        className={`p-3 sm:p-4 rounded-xl border ${
+                            theme === 'dark'
                                 ? 'bg-gradient-to-br from-emerald-900/30 to-green-900/20 border-emerald-500/20'
                                 : 'bg-white border-gray-200 shadow-sm'
-                            }`}
+                        }`}
                     >
                         <div className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Ticks</div>
                         <div
@@ -407,10 +413,11 @@ export default function DerivAnalysisApp() {
                         </div>
                     </div>
                     <div
-                        className={`p-3 sm:p-4 rounded-xl border ${theme === 'dark'
+                        className={`p-3 sm:p-4 rounded-xl border ${
+                            theme === 'dark'
                                 ? 'bg-gradient-to-br from-amber-900/30 to-yellow-900/20 border-amber-500/20'
                                 : 'bg-white border-gray-200 shadow-sm'
-                            }`}
+                        }`}
                     >
                         <div className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
                             Active Signals
@@ -427,8 +434,9 @@ export default function DerivAnalysisApp() {
                 <Tabs defaultValue='smart-analysis' className='space-y-4'>
                     <div className='overflow-x-auto -mx-3 px-3 sm:mx-0 sm:px-0'>
                         <TabsList
-                            className={`inline-flex gap-1 sm:gap-2 p-1 rounded-xl w-max min-w-full sm:min-w-0 ${theme === 'dark' ? 'bg-slate-800/50 backdrop-blur-sm' : 'bg-gray-100'
-                                }`}
+                            className={`inline-flex gap-1 sm:gap-2 p-1 rounded-xl w-max min-w-full sm:min-w-0 ${
+                                theme === 'dark' ? 'bg-slate-800/50 backdrop-blur-sm' : 'bg-gray-100'
+                            }`}
                         >
                             {[
                                 'smart-analysis',
@@ -453,16 +461,17 @@ export default function DerivAnalysisApp() {
                                 <TabsTrigger
                                     key={tab}
                                     value={tab}
-                                    className={`flex-shrink-0 rounded-lg border border-transparent text-[10px] sm:text-xs md:text-sm px-2 sm:px-3 py-1.5 sm:py-2 whitespace-nowrap transition-all capitalize font-medium ${tab === 'smartauto24'
+                                    className={`flex-shrink-0 rounded-lg border border-transparent text-[10px] sm:text-xs md:text-sm px-2 sm:px-3 py-1.5 sm:py-2 whitespace-nowrap transition-all capitalize font-medium ${
+                                        tab === 'smartauto24'
                                             ? 'data-[state=active]:border-yellow-500 data-[state=active]:bg-yellow-500/10 data-[state=active]:text-yellow-400 data-[state=active]:shadow-[0_2px_10px_rgba(234,179,8,0.25)]'
                                             : tab === 'autobot' || tab === 'automated' || tab === 'slider'
-                                                ? 'data-[state=active]:border-cyan-500 data-[state=active]:bg-cyan-500/10 data-[state=active]:text-cyan-400 data-[state=active]:shadow-[0_2px_10px_rgba(34,211,238,0.25)]'
-                                                : tab === 'tools-info'
-                                                    ? 'data-[state=active]:border-purple-500 data-[state=active]:bg-purple-500/10 data-[state=active]:text-purple-400 data-[state=active]:shadow-[0_2px_10px_rgba(168,85,247,0.25)]'
-                                                    : tab === 'trade-now'
-                                                        ? 'data-[state=active]:border-emerald-500 data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400 data-[state=active]:shadow-[0_2px_10px_rgba(34,197,94,0.25)]'
-                                                        : 'data-[state=active]:border-emerald-400 data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400 data-[state=active]:shadow-[0_2px_10px_rgba(34,211,238,0.25)]'
-                                        } data-[state=active]:bg-transparent ${theme === 'dark' ? 'text-gray-400 hover:text-white hover:bg-slate-800/50' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100/50'}`}
+                                              ? 'data-[state=active]:border-cyan-500 data-[state=active]:bg-cyan-500/10 data-[state=active]:text-cyan-400 data-[state=active]:shadow-[0_2px_10px_rgba(34,211,238,0.25)]'
+                                              : tab === 'tools-info'
+                                                ? 'data-[state=active]:border-purple-500 data-[state=active]:bg-purple-500/10 data-[state=active]:text-purple-400 data-[state=active]:shadow-[0_2px_10px_rgba(168,85,247,0.25)]'
+                                                : tab === 'trade-now'
+                                                  ? 'data-[state=active]:border-emerald-500 data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400 data-[state=active]:shadow-[0_2px_10px_rgba(34,197,94,0.25)]'
+                                                  : 'data-[state=active]:border-emerald-400 data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400 data-[state=active]:shadow-[0_2px_10px_rgba(34,211,238,0.25)]'
+                                    } data-[state=active]:bg-transparent ${theme === 'dark' ? 'text-gray-400 hover:text-white hover:bg-slate-800/50' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100/50'}`}
                                 >
                                     {tab.replace(/-/g, ' ')}
                                 </TabsTrigger>
@@ -474,10 +483,11 @@ export default function DerivAnalysisApp() {
                         <div className='space-y-4 sm:space-y-6'>
                             {/* Digit Distribution */}
                             <div
-                                className={`p-3 sm:p-4 md:p-6 rounded-xl border ${theme === 'dark'
+                                className={`p-3 sm:p-4 md:p-6 rounded-xl border ${
+                                    theme === 'dark'
                                         ? 'bg-gradient-to-br from-slate-800/50 to-slate-900/50 border-blue-500/20'
                                         : 'bg-white border-gray-200 shadow-sm'
-                                    }`}
+                                }`}
                             >
                                 <h3
                                     className={`text-base sm:text-lg font-semibold mb-3 sm:mb-4 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}
@@ -494,10 +504,11 @@ export default function DerivAnalysisApp() {
                             {/* Charts */}
                             <div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
                                 <div
-                                    className={`p-3 sm:p-4 md:p-6 rounded-xl border ${theme === 'dark'
+                                    className={`p-3 sm:p-4 md:p-6 rounded-xl border ${
+                                        theme === 'dark'
                                             ? 'bg-gradient-to-br from-slate-800/50 to-slate-900/50 border-purple-500/20'
                                             : 'bg-white border-gray-200 shadow-sm'
-                                        }`}
+                                    }`}
                                 >
                                     <h3
                                         className={`text-base sm:text-lg font-semibold mb-3 sm:mb-4 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}
@@ -507,10 +518,11 @@ export default function DerivAnalysisApp() {
                                     <LastDigitsChart digits={recentDigits} theme={theme} />
                                 </div>
                                 <div
-                                    className={`p-3 sm:p-4 md:p-6 rounded-xl border ${theme === 'dark'
+                                    className={`p-3 sm:p-4 md:p-6 rounded-xl border ${
+                                        theme === 'dark'
                                             ? 'bg-gradient-to-br from-slate-800/50 to-slate-900/50 border-cyan-500/20'
                                             : 'bg-white border-gray-200 shadow-sm'
-                                        }`}
+                                    }`}
                                 >
                                     <h3
                                         className={`text-base sm:text-lg font-semibold mb-3 sm:mb-4 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}

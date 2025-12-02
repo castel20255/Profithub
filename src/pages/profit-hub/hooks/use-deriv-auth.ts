@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { DERIV_API,DERIV_CONFIG } from '@/profit-hub/lib/deriv-config';
+import { DERIV_API, DERIV_CONFIG } from '@/profit-hub/lib/deriv-config';
 
 interface Balance {
     amount: number;
