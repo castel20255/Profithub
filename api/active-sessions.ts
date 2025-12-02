@@ -1,6 +1,6 @@
 // Vercel API handler (no external import needed)
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
     const { url } = req.query;
     if (!url || typeof url !== 'string') {
         res.status(400).json({ error: 'Missing or invalid url parameter' });
@@ -26,4 +26,4 @@ export default async function handler(req, res) {
         console.error('Proxy error', e);
         res.status(500).json({ error: 'Internal server error' });
     }
-}
+};
