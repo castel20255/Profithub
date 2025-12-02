@@ -1,0 +1,22 @@
+.tab-placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    min-height: 400px;
+    background-color: var(--general-section-1);
+    border-radius: 8px;
+    padding: 2rem;
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        max-width: 400px;
+    }
+
+    &__description {
+        color: var(--text-less-prominent);
+    }
+}

@@ -2,7 +2,11 @@
     "compilerOptions": {
         "target": "ES2020",
         "useDefineForClassFields": true,
-        "lib": ["ES2020", "DOM", "DOM.Iterable"],
+        "lib": [
+            "ES2020",
+            "DOM",
+            "DOM.Iterable"
+        ],
         "module": "ESNext",
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": false,
@@ -19,9 +23,19 @@
         "allowJs": true,
         "baseUrl": "./src",
         "paths": {
-            "@/*": ["./*"]
+            "@/*": [
+                "./*"
+            ],
+            "@/profit-hub/*": [
+                "./pages/profit-hub/*"
+            ]
         },
-        "types": ["jest", "@testing-library/jest-dom"]
+        "types": [
+            "jest",
+            "@testing-library/jest-dom"
+        ]
     },
-    "include": ["src"]
+    "include": [
+        "src"
+    ]
 }

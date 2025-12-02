@@ -42,28 +42,28 @@ export type TAccount = {
 
 export const platformsConfig: PlatformsConfig[] = [
     {
+        active: true,
+        buttonIcon: <DerivBotLogo height='32px' />,
+        description: localize('Automated trading at your fingertips. No coding needed.'),
+        href: standalone_routes.bot,
+        icon: <DerivBotLogo height='32px' />,
+        showInEU: false,
+    },
+    {
         active: false,
-        buttonIcon: <DerivTraderLogo height={25} width={114.97} />,
+        buttonIcon: <DerivTraderLogo height='32px' />,
         description: localize('A whole new trading experience on a powerful yet easy to use platform.'),
         href: standalone_routes.trade,
-        icon: <DerivTraderLogo height={32} width={148} />,
+        icon: <DerivTraderLogo height='32px' />,
         showInEU: true,
     },
     {
-        active: true,
-        buttonIcon: <DerivBotLogo height={25} width={94} />,
-        description: localize('Automated trading at your fingertips. No coding needed.'),
-        href: standalone_routes.bot,
-        icon: <DerivBotLogo height={32} width={121} />,
-        showInEU: false,
-    },
-    {
         active: false,
-        buttonIcon: <SmarttraderLogo height={24} width={115} />,
-        description: localize('Trade the world’s markets with our popular user-friendly platform.'),
+        buttonIcon: <SmarttraderLogo height='32px' />,
+        description: localize('Trade the world\'s markets with our popular user-friendly platform.'),
         href: standalone_routes.smarttrader,
-        icon: <SmarttraderLogo height={32} width={153} />,
-        showInEU: false,
+        icon: <SmarttraderLogo height='32px' />,
+        showInEU: true,
     },
 ];
 

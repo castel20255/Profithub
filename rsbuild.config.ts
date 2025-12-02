@@ -48,12 +48,19 @@ export default defineConfig({
         alias: {
             react: path.resolve('./node_modules/react'),
             'react-dom': path.resolve('./node_modules/react-dom'),
+            // ProfitHub-specific aliases (must come before general @/ aliases)
+            '@/profit-hub/components': path.resolve(__dirname, './src/pages/profit-hub/components'),
+            '@/profit-hub/hooks': path.resolve(__dirname, './src/pages/profit-hub/hooks'),
+            '@/profit-hub/lib': path.resolve(__dirname, './src/pages/profit-hub/lib'),
+            '@/profit-hub': path.resolve(__dirname, './src/pages/profit-hub'),
+            // General bot project aliases
             '@/external': path.resolve(__dirname, './src/external'),
             '@/components': path.resolve(__dirname, './src/components'),
             '@/hooks': path.resolve(__dirname, './src/hooks'),
             '@/utils': path.resolve(__dirname, './src/utils'),
             '@/constants': path.resolve(__dirname, './src/constants'),
             '@/stores': path.resolve(__dirname, './src/stores'),
+            '@/lib': path.resolve(__dirname, './src/lib'),
         },
     },
     output: {
