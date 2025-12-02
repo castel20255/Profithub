@@ -9,6 +9,7 @@
  */
 
 import { extractLastDigit } from './deriv-markets';
+import { DERIV_CONFIG } from './deriv-config';
 
 // Contract types per Deriv API documentation
 // Reference: https://api.deriv.com/api-explorer#proposal
@@ -101,7 +102,7 @@ export class DerivFastTradeEngine {
     private onTradeResult: ((result: TradeResult) => void) | null = null;
     private onStatusChange: ((status: string) => void) | null = null;
 
-    constructor(appId = '113536') {
+    constructor(appId = DERIV_CONFIG.APP_ID.toString()) {
         this.appId = appId;
     }
 

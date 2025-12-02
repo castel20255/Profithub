@@ -1,6 +1,6 @@
 'use client';
 
-import { DERIV_CONFIG } from '@/lib/deriv-config';
+import { DERIV_CONFIG } from '@/profit-hub/lib/deriv-config';
 
 export interface TradeRequest {
     market: string;
