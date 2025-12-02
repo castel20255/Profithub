@@ -150,10 +150,8 @@ const AppHeader = observer(({ isAuthenticating }: TAppHeaderProps) => {
                     <Button
                         primary
                         onClick={() => {
-                            // Force signup with app_id 113536
-                            const redirectUri = encodeURIComponent(window.location.href.split('?')[0]);
-                            const signupUrl = `https://oauth.deriv.com/oauth2/authorize?app_id=113536&redirect_uri=${redirectUri}`;
-                            window.location.href = signupUrl;
+                            // Redirect to signup affiliate link
+                            window.location.href = 'https://track.deriv.com/_1mHiO0UpCX4pl7dR3lTXiGNd7ZgqdRLk/1/';
                         }}
                     >
                         <Localize i18n_default_text='Sign up' />
