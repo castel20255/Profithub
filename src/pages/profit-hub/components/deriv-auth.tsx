@@ -35,7 +35,7 @@ export function DerivAuth({ theme = 'dark' }: DerivAuthProps) {
     };
 
     const createDerivAccount = () => {
-        window.open('https://track.deriv.com/_1mHiO0UpCX6NhxmBqQyZL2Nd7ZgqdRLk/1/', '_blank', 'noopener,noreferrer');
+        window.open('https://track.deriv.com/_1mHiO0UpCX4pl7dR3lTXiGNd7ZgqdRLk/1/', '_blank', 'noopener,noreferrer');
     };
 
     const loginWithDeriv = () => {
