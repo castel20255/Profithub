@@ -104,6 +104,14 @@ export const AuthWrapper = () => {
     const { isOnline } = useOfflineDetection();
 
     React.useEffect(() => {
+        // Set a global timeout to prevent infinite loading (max 5 seconds)
+        const globalTimeout = setTimeout(() => {
+            if (!isAuthComplete) {
+                console.warn('[Auth] Global timeout reached, proceeding with partial auth');
+                setIsAuthComplete(true);
+            }
+        }, 5000);
+
         const initializeAuth = async () => {
             try {
                 // Pass isOnline to setLocalStorageToken to handle offline mode properly
@@ -122,9 +130,11 @@ export const AuthWrapper = () => {
         if (!isOnline) {
             console.log('[Auth] Offline detected, proceeding with minimal auth');
             setIsAuthComplete(true);
+        } else {
+            initializeAuth();
         }
 
-        initializeAuth();
+        return () => clearTimeout(globalTimeout);
     }, [loginInfo, paramsToDelete, isOnline]);
 
     // Add timeout for offline scenarios to prevent infinite loading
