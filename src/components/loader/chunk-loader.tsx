@@ -1,5 +1,6 @@
 import React from 'react';
 import { Twitter, Send } from 'lucide-react';
+import { DerivLogo } from '@deriv-com/ui';
 import './chunk-loader.scss';
 
 interface ChunkLoaderProps {
@@ -10,6 +11,9 @@ export default function ChunkLoader({ message }: ChunkLoaderProps) {
     return (
         <div className='chunk-loader'>
             <div className='chunk-loader__content'>
+                <div className='chunk-loader__logo' role='img' aria-label='Deriv logo'>
+                    <DerivLogo height='36px' />
+                </div>
                 <h1 className='chunk-loader__title'>Welcome to PROFITHUB</h1>
 
                 <div className='chunk-loader__sub'>

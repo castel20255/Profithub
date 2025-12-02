@@ -3,32 +3,49 @@
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    /* Soft gradient background with subtle light tones to match a soft UI */
+    background: linear-gradient(135deg, #f6f7ff 0%, #eef2ff 50%, #f6f7ff 100%);
 
     &__content {
         text-align: center;
-        max-width: 500px;
-        padding: 2rem;
+        max-width: 540px;
+        padding: 2.4rem;
+        background: rgba(255, 255, 255, 0.75);
+        border-radius: 20px;
+        box-shadow: 18px 18px 36px rgba(16, 24, 40, 0.08), -8px -8px 20px rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(6px);
     }
 
     &__title {
-        font-size: 3.2rem;
+        font-size: 3rem;
         font-weight: 700;
-        background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 50%, #6d28d9 100%);
+        background: linear-gradient(135deg, #5A2ECB 0%, #6D28D9 60%, #4F46E5 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
-        margin-bottom: 3rem;
+        margin-bottom: 1.25rem;
         animation: fadeIn 0.8s ease-out;
     }
 
+    &__logo {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 76px;
+        height: 46px;
+        margin: 0 auto 1rem auto;
+        border-radius: 12px;
+        background: linear-gradient(180deg, rgba(90,46,203,0.06), rgba(90,46,203,0.02));
+        box-shadow: 8px 8px 20px rgba(18, 32, 60, 0.06), -4px -4px 12px rgba(255,255,255,0.6);
+    }
+
     &__sub {
-        color: rgba(255,255,255,0.85);
-        margin-bottom: 1rem;
+        color: rgba(17, 24, 39, 0.75);
+        margin-bottom: 0.6rem;
         font-size: 1rem;
         a {
-            color: rgba(255,255,255,0.95);
-            font-weight: 600;
+            color: #5A2ECB;
+            font-weight: 700;
             margin-left: 0.25rem;
             text-decoration: underline;
         }
@@ -37,7 +54,7 @@
     &__progress-bar {
         width: 100%;
         height: 8px;
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(90, 46, 203, 0.08);
         border-radius: 10px;
         overflow: hidden;
         margin-bottom: 1.6rem;
@@ -46,14 +63,14 @@
     &__progress-fill {
         height: 100%;
         width: 0%;
-        background: linear-gradient(90deg, #8b5cf6 0%, #7c3aed 50%, #6d28d9 100%);
+        background: linear-gradient(90deg, #5A2ECB 0%, #6D28D9 60%, #4F46E5 100%);
         border-radius: 10px;
         animation: progressBar 2s ease-in-out infinite;
-        box-shadow: 0 0 20px rgba(139, 92, 246, 0.6);
+        box-shadow: 0 8px 30px rgba(90, 46, 203, 0.18);
     }
 
     &__message {
-        color: rgba(255, 255, 255, 0.8);
+        color: rgba(17, 24, 39, 0.8);
         font-size: 1.4rem;
         animation: fadeIn 1s ease-out;
     }
