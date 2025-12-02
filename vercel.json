@@ -14,5 +14,10 @@
             "src": "/(.*)",
             "dest": "/index.html"
         }
-    ]
+    ],
+    "build": {
+        "env": {
+            "NODE_VERSION": "18"
+        }
+    }
 }

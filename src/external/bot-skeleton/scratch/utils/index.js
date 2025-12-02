@@ -195,13 +195,14 @@ export const load = async ({
     }
 
     // Check if all block types in XML are allowed.
-    const has_invalid_blocks = Array.from(blockly_xml).some(block => {
-        const block_type = block.getAttribute('type');
-        return !Object.keys(window.Blockly.Blocks).includes(block_type);
-    });
-    if (has_invalid_blocks) {
-        return showInvalidStrategyError();
-    }
+    // COMMENTED OUT: Allow loading XML files with custom/unknown blocks
+    // const has_invalid_blocks = Array.from(blockly_xml).some(block => {
+    //     const block_type = block.getAttribute('type');
+    //     return !Object.keys(window.Blockly.Blocks).includes(block_type);
+    // });
+    // if (has_invalid_blocks) {
+    //     return showInvalidStrategyError();
+    // }
 
     try {
         const is_collection = xml.hasAttribute('collection') && xml.getAttribute('collection') === 'true';
