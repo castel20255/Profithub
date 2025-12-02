@@ -59,6 +59,8 @@ class APIBase {
     active_symbols_promise: Promise<void> | null = null;
     common_store: CommonStore | undefined;
     landing_company: string | null = null;
+    private is_initializing = false;
+    private initialization_promise: Promise<void> | null = null;
 
     unsubscribeAllSubscriptions = () => {
         this.current_auth_subscriptions?.forEach(subscription_promise => {
@@ -83,6 +85,30 @@ class APIBase {
     }
 
     async init(force_create_connection = false) {
+        // If already initializing, wait for that process to complete
+        if (this.is_initializing && this.initialization_promise) {
+            console.log('[v0] API already initializing, waiting...');
+            return this.initialization_promise;
+        }
+
+        // If already connected and not forcing, skip initialization
+        if (this.api?.connection?.readyState === 1 && !force_create_connection) {
+            console.log('[v0] API already connected, skipping init');
+            return;
+        }
+
+        this.is_initializing = true;
+        this.initialization_promise = this._initializeConnection(force_create_connection);
+
+        try {
+            await this.initialization_promise;
+        } finally {
+            this.is_initializing = false;
+            this.initialization_promise = null;
+        }
+    }
+
+    private async _initializeConnection(force_create_connection = false) {
         this.toggleRunButton(true);
 
         if (this.api) {
@@ -98,6 +124,7 @@ class APIBase {
                 this.api.connection.removeEventListener('close', this.onsocketclose.bind(this));
             }
 
+            console.log('[v0] Creating new WebSocket connection...');
             this.api = generateDerivApiInstance();
             this.api?.connection.addEventListener('open', this.onsocketopen.bind(this));
             this.api?.connection.addEventListener('close', this.onsocketclose.bind(this));
