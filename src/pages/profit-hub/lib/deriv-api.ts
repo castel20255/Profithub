@@ -101,7 +101,7 @@ export class DerivAPIClient {
     private subscriptions: Map<string, Function> = new Map();
     private _isAuthorized = false;
     private authToken: string | null = null;
-    private _appId = '106629';
+    private _appId = '113536';
     private endpoint = 'wss://ws.derivws.com/websockets/v3';
     private errorCallback: ((error: Error) => void) | null = null;
     private _isConnected = false;
@@ -109,11 +109,11 @@ export class DerivAPIClient {
 
     constructor(options?: DerivAPIClientOptions | string, endpoint?: string) {
         if (typeof options === 'object' && options !== null) {
-            this._appId = options.appId ? String(options.appId) : '106629';
+            this._appId = options.appId ? String(options.appId) : '113536';
             this.endpoint = options.endpoint || 'wss://ws.derivws.com/websockets/v3';
             this.authToken = options.token || null;
         } else if (typeof options === 'string') {
-            this._appId = options || '106629';
+            this._appId = options || '113536';
             this.endpoint = endpoint || 'wss://ws.derivws.com/websockets/v3';
         }
         console.log('[v0] DerivAPIClient initialized with app_id:', this._appId);
@@ -153,7 +153,7 @@ export class DerivAPIClient {
      */
     async connect(): Promise<void> {
         return new Promise((resolve, reject) => {
-            const url = `${this.endpoint}?app_id=106629`;
+            const url = `${this.endpoint}?app_id=${this._appId}`;
             console.log('[v0] Connecting to:', url);
             this.ws = new WebSocket(url);
 
@@ -167,7 +167,8 @@ export class DerivAPIClient {
                 console.error('[v0] WebSocket connection error:', error);
                 this._isConnected = false;
                 this.stopPingInterval();
-                this.emitError(new Error('WebSocket connection error'));
+                const errMsg = `WebSocket connection error with app_id=${this._appId}`;
+                this.emitError(new Error(errMsg));
                 reject(error);
             };
             this.ws.onclose = () => {
@@ -199,7 +200,8 @@ export class DerivAPIClient {
     send(request: any): Promise<any> {
         return new Promise((resolve, reject) => {
             if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
-                const error = new Error('WebSocket not connected');
+                const errMsg = `WebSocket not connected (app_id=${this._appId}, state=${this.ws?.readyState})`;
+                const error = new Error(errMsg);
                 this.emitError(error);
                 reject(error);
                 return;
