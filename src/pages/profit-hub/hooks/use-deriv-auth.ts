@@ -75,14 +75,30 @@ export function useDerivAuth() {
         console.log('[WebSocket] Connecting to:', `${DERIV_API.WEBSOCKET}?app_id=${DERIV_CONFIG.APP_ID}`);
 
         const ws = new WebSocket(`${DERIV_API.WEBSOCKET}?app_id=${DERIV_CONFIG.APP_ID}`);
+        let pingInterval: NodeJS.Timeout | null = null;
 
         ws.onopen = () => {
             console.log('[WebSocket] Connected, authorizing...');
             ws.send(JSON.stringify({ authorize: accountToken }));
+
+            // Start ping interval to keep connection alive (every 30 seconds)
+            // Deriv WebSocket times out after ~2 minutes of inactivity
+            pingInterval = setInterval(() => {
+                if (ws.readyState === WebSocket.OPEN) {
+                    ws.send(JSON.stringify({ ping: 1 }));
+                    console.log('[WebSocket] Ping sent');
+                }
+            }, 30000);
         };
 
         ws.onmessage = (msg) => {
             const data = JSON.parse(msg.data);
+
+            // Handle ping response
+            if (data.msg_type === 'ping') {
+                console.log('[WebSocket] Pong received');
+                return;
+            }
 
             if (data.error) {
                 console.error('[WebSocket] Error:', data.error.message);
@@ -139,16 +155,19 @@ export function useDerivAuth() {
         ws.onerror = (error) => {
             console.error('[WebSocket] Connection error:', error);
             setConnectionStatus('disconnected');
+            if (pingInterval) clearInterval(pingInterval);
         };
 
         ws.onclose = () => {
             console.log('[WebSocket] Connection closed');
             setConnectionStatus('disconnected');
+            if (pingInterval) clearInterval(pingInterval);
         };
 
         setWsRef(ws);
 
         return () => {
+            if (pingInterval) clearInterval(pingInterval);
             ws.close();
         };
     };
