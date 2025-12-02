@@ -5,7 +5,7 @@ import { Button } from '@/profit-hub/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/profit-hub/components/ui/select';
 import { Badge } from '@/profit-hub/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/profit-hub/components/ui/avatar';
-import { User, LogIn, LogOut, UserPlus } from 'lucide-react';
+import { User, LogIn, LogOut, UserPlus, ExternalLink } from 'lucide-react';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -87,11 +87,10 @@ export function DerivAuth({ theme = 'dark' }: DerivAuthProps) {
                     <Button
                         onClick={createDerivAccount}
                         size='sm'
-                        className={`text-xs sm:text-sm ${
-                            theme === 'dark'
-                                ? 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white'
-                                : 'bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white'
-                        }`}
+                        className={`text-xs sm:text-sm ${theme === 'dark'
+                            ? 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white'
+                            : 'bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white'
+                            }`}
                     >
                         <UserPlus className='h-4 w-4 mr-1' />
                         Create Account
@@ -99,11 +98,10 @@ export function DerivAuth({ theme = 'dark' }: DerivAuthProps) {
                     <Button
                         onClick={loginWithDeriv}
                         size='sm'
-                        className={`text-xs sm:text-sm ${
-                            theme === 'dark'
-                                ? 'bg-blue-600 hover:bg-blue-700 text-white'
-                                : 'bg-blue-500 hover:bg-blue-600 text-white'
-                        }`}
+                        className={`text-xs sm:text-sm ${theme === 'dark'
+                            ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                            : 'bg-blue-500 hover:bg-blue-600 text-white'
+                            }`}
                     >
                         <LogIn className='h-4 w-4 mr-1' />
                         Login
@@ -114,11 +112,10 @@ export function DerivAuth({ theme = 'dark' }: DerivAuthProps) {
             {isLoggedIn && (
                 <div className='flex items-center space-x-2 sm:space-x-3'>
                     <div
-                        className={`flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 rounded-md border ${
-                            theme === 'dark'
-                                ? 'bg-gray-800/50 border-blue-500/20 shadow-[0_0_10px_rgba(59,130,246,0.2)]'
-                                : 'bg-gray-100 border-gray-300'
-                        }`}
+                        className={`flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 rounded-md border ${theme === 'dark'
+                            ? 'bg-gray-800/50 border-blue-500/20 shadow-[0_0_10px_rgba(59,130,246,0.2)]'
+                            : 'bg-gray-100 border-gray-300'
+                            }`}
                     >
                         <div className='flex items-center gap-1.5'>
                             <span
@@ -145,11 +142,17 @@ export function DerivAuth({ theme = 'dark' }: DerivAuthProps) {
                             >
                                 Account:
                             </span>
-                            <span
-                                className={`text-xs sm:text-sm font-mono font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}
+                            <a
+                                href={`https://app.deriv.com/account`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={`text-xs sm:text-sm font-mono font-semibold flex items-center gap-1 hover:underline cursor-pointer transition-colors ${theme === 'dark' ? 'text-cyan-400 hover:text-cyan-300' : 'text-blue-600 hover:text-blue-700'
+                                    }`}
+                                title="Open Deriv Account"
                             >
                                 {accountCode}
-                            </span>
+                                <ExternalLink className='h-3 w-3' />
+                            </a>
                         </div>
 
                         {balance && (

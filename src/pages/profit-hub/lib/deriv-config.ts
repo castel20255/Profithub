@@ -1,30 +1,16 @@
 /**
- * Deriv API Configuration
- *
- * Official Deriv GitHub Repositories:
- * - Main Deriv App (DTrader, Cashier, Account, Bot Web UI): https://github.com/deriv-com/deriv-app
- * - SmartTrader Platform: https://github.com/deriv-com/deriv-smarttrader
- * - Deriv API (WebSocket): https://github.com/deriv-com/deriv-api
- * - Deriv Copy Trading: https://github.com/deriv-com/copy-trading
- * - DBot: https://github.com/deriv-com/deriv-bot
- * - Derivatives Base (optional): https://github.com/deriv-com/derivatives
+ * Deriv API Configuration - Official OAuth Flow
+ * @see https://developers.deriv.com/docs/authentication
  */
 
+// Single App ID for all environments (production)
 export const DERIV_APP_ID = 106629;
+
+// Get current page URL for OAuth redirect
 export const DERIV_REDIRECT_URL = typeof window !== 'undefined' ? window.location.origin : '';
 
-export const getAppId = () => {
-    if (typeof window === 'undefined') return DERIV_APP_ID;
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        return 61554; // Test App ID for localhost
-    }
-    return DERIV_APP_ID;
-};
-
 export const DERIV_CONFIG = {
-    get APP_ID() {
-        return getAppId();
-    },
+    APP_ID: DERIV_APP_ID,
     REDIRECT_URL: DERIV_REDIRECT_URL,
 } as const;
 
@@ -42,48 +28,22 @@ export const DERIV_API = {
     OAUTH: 'https://oauth.deriv.com/oauth2/authorize',
 } as const;
 
-// Official GitHub Repositories
+// Official GitHub Repositories (for reference)
 export const DERIV_REPOS = {
     MAIN_APP: {
         name: 'deriv-app',
         url: 'https://github.com/deriv-com/deriv-app',
-        description: 'Main Deriv web platform - includes DTrader, Cashier, and Account modules',
-        branch: 'master',
-        integration: 'For DTrader, Auth, and base styling (via iframe embedding and API auth)',
+        description: 'Main Deriv web platform',
     },
     DBOT: {
         name: 'deriv-bot',
         url: 'https://github.com/deriv-com/deriv-bot',
-        description: 'Official DBot (block-based automation bot builder)',
-        branch: 'master',
-        integration: 'For the DBot tab - runs inside iframe using app ID for Deriv API connection',
-    },
-    SMARTTRADER: {
-        name: 'deriv-smarttrader',
-        url: 'https://github.com/deriv-com/deriv-smarttrader',
-        description: 'SmartTrader web trading interface',
-        branch: 'master',
-        integration: 'For the SmartTrader tab - embedded iframe + login passthrough',
-    },
-    COPYTRADING: {
-        name: 'copy-trading',
-        url: 'https://github.com/deriv-com/copy-trading',
-        description: 'Official Copy Trading UI',
-        branch: 'main',
-        integration: 'For the Copy Trading tab - iframe with API token sync',
+        description: 'Official DBot',
     },
     API: {
         name: 'deriv-api',
         url: 'https://github.com/deriv-com/deriv-api',
         description: 'Official Deriv WebSocket API SDK',
-        branch: 'master',
-        integration: 'For integrating trading and account features into custom apps',
-    },
-    DERIVATIVES: {
-        name: 'derivatives',
-        url: 'https://github.com/deriv-com/derivatives',
-        description: "Deriv's open-source derivatives engine",
-        branch: 'master',
-        integration: 'Optional - Used for trade execution logic (if running backend trading logic)',
     },
 } as const;
+

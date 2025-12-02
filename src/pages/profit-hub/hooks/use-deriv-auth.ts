@@ -1,9 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getAppId } from '@/profit-hub/lib/deriv-config';
-import { getSocketURL } from '@/components/shared';
-
+import { DERIV_CONFIG, DERIV_API } from '@/profit-hub/lib/deriv-config';
 
 interface Balance {
     amount: number;
@@ -14,6 +12,7 @@ interface Account {
     id: string;
     type: 'Demo' | 'Real';
     currency: string;
+    token: string;
 }
 
 export function useDerivAuth() {
@@ -25,87 +24,209 @@ export function useDerivAuth() {
     const [accounts, setAccounts] = useState<Account[]>([]);
     const [activeLoginId, setActiveLoginId] = useState<string | null>(null);
     const [wsRef, setWsRef] = useState<WebSocket | null>(null);
-    const [balanceSubscribed, setBalanceSubscribed] = useState(false);
     const [connectionStatus, setConnectionStatus] = useState<'disconnected' | 'connecting' | 'connected'>(
         'disconnected'
     );
 
-    useEffect(() => {
-        if (typeof window === 'undefined') return;
-
-        const storedAccountType = localStorage.getItem('deriv_account_type') as 'Demo' | 'Real' | null;
-        const storedBalance = localStorage.getItem('deriv_balance');
-        const storedAccountCode = localStorage.getItem('deriv_account_code');
-        const storedActiveLoginId = localStorage.getItem('deriv_active_login_id');
-
-        if (storedAccountType) setAccountType(storedAccountType);
-        if (storedBalance) setBalance(JSON.parse(storedBalance));
-        if (storedAccountCode) setAccountCode(storedAccountCode);
-        if (storedActiveLoginId) setActiveLoginId(storedActiveLoginId);
-    }, []);
-
-    const loginWithDeriv = () => {
-        if (typeof window === 'undefined') return;
-
-        const redirectUri = encodeURIComponent(window.location.href.split('?')[0]);
-        const oauthUrl = `https://oauth.deriv.com/oauth2/authorize?app_id=${getAppId()}&redirect_uri=${redirectUri}`;
-
-        console.log('[v0] 🔐 Initiating OAuth login...');
-        window.location.href = oauthUrl;
-    };
-
-    useEffect(() => {
-        if (typeof window === 'undefined') return;
-
+    // Parse tokens from OAuth redirect URL
+    const parseTokensFromURL = (): Account[] => {
         const urlParams = new URLSearchParams(window.location.search);
-        let oauthToken = urlParams.get('token');
+        const accounts: Account[] = [];
 
-        if (!oauthToken) {
-            for (let i = 1; i < 5; i++) {
-                const tokenKey = `token${i}`;
-                if (urlParams.has(tokenKey)) {
-                    oauthToken = urlParams.get(tokenKey);
-                    break;
-                }
-            }
-        }
+        // Parse acct1/token1/cur1, acct2/token2/cur2, etc.
+        for (let i = 1; i <= 10; i++) {
+            const acct = urlParams.get(`acct${i}`);
+            const token = urlParams.get(`token${i}`);
+            const cur = urlParams.get(`cur${i}`);
 
-        const accountsFromUrl = [];
-        for (let i = 1; i < 5; i++) {
-            const acctKey = `acct${i}`;
-            const tokenKey = `token${i}`;
-            const curKey = `cur${i}`;
-            if (urlParams.has(acctKey) && urlParams.has(tokenKey) && urlParams.has(curKey)) {
-                accountsFromUrl.push({
-                    id: urlParams.get(acctKey),
-                    token: urlParams.get(tokenKey),
-                    currency: urlParams.get(curKey),
+            if (acct && token && cur) {
+                accounts.push({
+                    id: acct,
+                    token: token,
+                    currency: cur.toUpperCase(),
+                    type: acct.includes('VR') || acct.includes('VRTC') ? 'Demo' : 'Real',
                 });
             }
         }
 
-        if (oauthToken) {
-            console.log('[v0] ✅ OAuth token found in URL');
-            localStorage.setItem('deriv_api_token', oauthToken);
-            setToken(oauthToken);
-            connectWithToken(oauthToken);
+        console.log('[OAuth] Parsed', accounts.length, 'accounts from URL');
+        return accounts;
+    };
 
-            if (accountsFromUrl.length > 0) {
-                localStorage.setItem('deriv_accounts', JSON.stringify(accountsFromUrl));
+    // OAuth login - redirect to Deriv
+    const loginWithDeriv = () => {
+        if (typeof window === 'undefined') return;
+
+        const redirectUri = encodeURIComponent(window.location.href.split('?')[0]);
+        const oauthUrl = `${DERIV_API.OAUTH}?app_id=${DERIV_CONFIG.APP_ID}&redirect_uri=${redirectUri}`;
+
+        console.log('[OAuth] Redirecting to:', oauthUrl);
+        window.location.href = oauthUrl;
+    };
+
+    // Connect WebSocket and authorize
+    const connectAndAuthorize = (accountToken: string, accountId: string) => {
+        if (wsRef) {
+            console.log('[WebSocket] Closing existing connection');
+            wsRef.close();
+        }
+
+        setConnectionStatus('connecting');
+        console.log('[WebSocket] Connecting to:', `${DERIV_API.WEBSOCKET}?app_id=${DERIV_CONFIG.APP_ID}`);
+
+        const ws = new WebSocket(`${DERIV_API.WEBSOCKET}?app_id=${DERIV_CONFIG.APP_ID}`);
+
+        ws.onopen = () => {
+            console.log('[WebSocket] Connected, authorizing...');
+            ws.send(JSON.stringify({ authorize: accountToken }));
+        };
+
+        ws.onmessage = (msg) => {
+            const data = JSON.parse(msg.data);
+
+            if (data.error) {
+                console.error('[WebSocket] Error:', data.error.message);
+                if (data.error.code === 'InvalidToken') {
+                    console.log('[WebSocket] Invalid token, clearing and re-authenticating');
+                    localStorage.removeItem('deriv_accounts');
+                    localStorage.removeItem('deriv_active_token');
+                    localStorage.removeItem('deriv_active_login_id');
+                    setConnectionStatus('disconnected');
+                    loginWithDeriv();
+                }
+                return;
             }
 
-            window.history.replaceState({}, document.title, window.location.pathname);
+            // Handle authorize response
+            if (data.msg_type === 'authorize' && data.authorize) {
+                const { authorize } = data;
+                const accType = authorize.is_virtual ? 'Demo' : 'Real';
+
+                console.log('[Auth] Success!');
+                console.log('[Auth] Account:', authorize.loginid, `(${accType})`);
+                console.log('[Auth] Balance:', authorize.balance, authorize.currency);
+
+                setConnectionStatus('connected');
+                setAccountType(accType);
+                setActiveLoginId(authorize.loginid);
+                setAccountCode(authorize.loginid);
+                setIsLoggedIn(true);
+                setToken(accountToken);
+
+                // Set balance
+                const balanceData = {
+                    amount: authorize.balance,
+                    currency: authorize.currency,
+                };
+                setBalance(balanceData);
+
+                // Subscribe to balance updates
+                ws.send(JSON.stringify({ balance: 1, subscribe: 1 }));
+                console.log('[WebSocket] Balance subscription started');
+            }
+
+            // Handle balance updates
+            if (data.msg_type === 'balance' && data.balance) {
+                console.log('[Balance] Update:', data.balance.balance, data.balance.currency);
+                const balanceData = {
+                    amount: data.balance.balance,
+                    currency: data.balance.currency,
+                };
+                setBalance(balanceData);
+            }
+        };
+
+        ws.onerror = (error) => {
+            console.error('[WebSocket] Connection error:', error);
+            setConnectionStatus('disconnected');
+        };
+
+        ws.onclose = () => {
+            console.log('[WebSocket] Connection closed');
+            setConnectionStatus('disconnected');
+        };
+
+        setWsRef(ws);
+
+        return () => {
+            ws.close();
+        };
+    };
+
+    // Switch account
+    const switchAccount = (loginId: string) => {
+        const account = accounts.find((acc) => acc.id === loginId);
+        if (!account) {
+            console.error('[Switch] Account not found:', loginId);
             return;
         }
 
-        const storedToken = localStorage.getItem('deriv_api_token');
+        console.log('[Switch] Switching to:', loginId);
+        localStorage.setItem('deriv_active_token', account.token);
+        localStorage.setItem('deriv_active_login_id', loginId);
 
-        if (storedToken && storedToken.length > 10) {
-            console.log('[v0] ✅ Existing API token found');
-            setToken(storedToken);
-            connectWithToken(storedToken);
+        connectAndAuthorize(account.token, loginId);
+    };
+
+    // Logout
+    const logout = () => {
+        console.log('[Auth] Logging out');
+        if (wsRef) {
+            wsRef.close();
+        }
+        localStorage.removeItem('deriv_accounts');
+        localStorage.removeItem('deriv_active_token');
+        localStorage.removeItem('deriv_active_login_id');
+        setIsLoggedIn(false);
+        setToken('');
+        setBalance(null);
+        setAccountType(null);
+        setAccountCode('');
+        setActiveLoginId(null);
+        setAccounts([]);
+        setConnectionStatus('disconnected');
+    };
+
+    // Initialize auth on mount
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+
+        // Check for OAuth redirect with tokens
+        const urlAccounts = parseTokensFromURL();
+
+        if (urlAccounts.length > 0) {
+            console.log('[OAuth] Found tokens in URL, saving...');
+
+            // Save accounts
+            localStorage.setItem('deriv_accounts', JSON.stringify(urlAccounts));
+            setAccounts(urlAccounts);
+
+            // Use first account by default
+            const firstAccount = urlAccounts[0];
+            localStorage.setItem('deriv_active_token', firstAccount.token);
+            localStorage.setItem('deriv_active_login_id', firstAccount.id);
+
+            // Clean URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+
+            // Connect and authorize
+            connectAndAuthorize(firstAccount.token, firstAccount.id);
+            return;
+        }
+
+        // Check for stored session
+        const storedAccounts = localStorage.getItem('deriv_accounts');
+        const storedToken = localStorage.getItem('deriv_active_token');
+        const storedLoginId = localStorage.getItem('deriv_active_login_id');
+
+        if (storedAccounts && storedToken && storedLoginId) {
+            console.log('[Auth] Found stored session');
+            const parsedAccounts = JSON.parse(storedAccounts);
+            setAccounts(parsedAccounts);
+            connectAndAuthorize(storedToken, storedLoginId);
         } else {
-            console.log('[v0] ℹ️ No API token found, initiating OAuth login');
+            console.log('[Auth] No session found, login required');
+            // Auto-redirect to login
             loginWithDeriv();
         }
 
@@ -116,187 +237,17 @@ export function useDerivAuth() {
         };
     }, []);
 
-    const connectWithToken = (apiToken: string) => {
-        if (!apiToken || apiToken.length < 10) {
-            console.error('[v0] ❌ Invalid API token');
-            setConnectionStatus('disconnected');
-            return;
-        }
-
-        if (wsRef) {
-            console.log('[v0] Closing existing WebSocket connection');
-            wsRef.close();
-        }
-
-        setConnectionStatus('connecting');
-        const socketServer = typeof window !== 'undefined' ? getSocketURL() : 'ws.derivws.com';
-        const appId = getAppId();
-        console.log('[v0] 🔌 Connecting to Deriv WebSocket:', socketServer, 'app_id:', appId);
-        const ws = new WebSocket(`wss://${socketServer}/websockets/v3?app_id=${appId}`);
-
-        ws.onopen = () => {
-            console.log('[v0] ✅ WebSocket connected, sending authorization...');
-            ws.send(JSON.stringify({ authorize: apiToken }));
-        };
-
-        ws.onmessage = msg => {
-            const data = JSON.parse(msg.data);
-
-            if (data.error) {
-                console.error('[v0] ❌ WebSocket error:', data.error.message);
-                if (data.error.code === 'InvalidToken') {
-                    console.log('[v0] ⚠️ Invalid token, clearing storage and re-initiating OAuth login');
-                    localStorage.removeItem('deriv_api_token');
-                    setConnectionStatus('disconnected');
-                    loginWithDeriv();
-                }
-                return;
-            }
-
-            if (data.msg_type === 'authorize' && data.authorize) {
-                const { authorize } = data;
-                const accType = authorize.is_virtual ? 'Demo' : 'Real';
-                const accCode = authorize.loginid || '';
-
-                console.log('[v0] ✅ OAuth Authorization Complete!');
-                console.log('[v0] 👤 Account:', authorize.loginid, `(${accType})`);
-                console.log('[v0] 💰 Balance:', authorize.balance, authorize.currency);
-
-                setConnectionStatus('connected');
-                setAccountType(accType);
-                setActiveLoginId(authorize.loginid);
-                setAccountCode(accCode);
-                setIsLoggedIn(true);
-
-                localStorage.setItem('deriv_account_type', accType);
-                localStorage.setItem('deriv_account_code', accCode);
-                localStorage.setItem('deriv_active_login_id', authorize.loginid);
-
-                const allAccounts = [];
-                const storedAccounts = JSON.parse(localStorage.getItem('deriv_accounts') || '[]');
-
-                if (authorize.account_list && Array.isArray(authorize.account_list)) {
-                    console.log('[v0] 📋 Found', authorize.account_list.length, 'linked accounts');
-                    const formatted = authorize.account_list.map((acc: any) => ({
-                        id: acc.loginid,
-                        type: acc.is_virtual ? 'Demo' : 'Real',
-                        currency: acc.currency,
-                    }));
-                    allAccounts.push(...formatted);
-                }
-
-                if (storedAccounts.length > 0) {
-                    storedAccounts.forEach(storedAcc => {
-                        if (!allAccounts.find(acc => acc.id === storedAcc.id)) {
-                            allAccounts.push({
-                                id: storedAcc.id,
-                                type: storedAcc.id.includes('VR') ? 'Demo' : 'Real',
-                                currency: storedAcc.currency,
-                            });
-                        }
-                    });
-                }
-
-                setAccounts(allAccounts);
-
-                if (!balanceSubscribed) {
-                    ws.send(JSON.stringify({ forget_all: ['balance'] }));
-                    setTimeout(() => {
-                        ws.send(JSON.stringify({ balance: 1, subscribe: 1 }));
-                        setBalanceSubscribed(true);
-                        console.log('[v0] ✅ Balance subscription started');
-                    }, 100);
-                }
-            }
-
-            if (data.msg_type === 'balance' && data.balance) {
-                console.log('[v0] 💰 Balance update:', data.balance.balance, data.balance.currency);
-                const balanceData = {
-                    amount: data.balance.balance,
-                    currency: data.balance.currency,
-                };
-                setBalance(balanceData);
-                localStorage.setItem('deriv_balance', JSON.stringify(balanceData));
-            }
-        };
-
-        ws.onclose = () => {
-            console.log('[v0] 🔌 WebSocket disconnected');
-            setConnectionStatus('disconnected');
-            setBalanceSubscribed(false);
-        };
-
-        ws.onerror = error => {
-            console.error('[v0] ❌ WebSocket error:', error);
-            setConnectionStatus('disconnected');
-        };
-
-        setWsRef(ws);
-    };
-
-    const logout = () => {
-        if (typeof window === 'undefined') return;
-
-        console.log('[v0] 👋 Logging out...');
-        if (wsRef) {
-            wsRef.send(JSON.stringify({ forget_all: ['balance', 'ticks', 'proposal_open_contract'] }));
-            wsRef.close();
-        }
-        localStorage.removeItem('deriv_api_token');
-        localStorage.removeItem('deriv_token');
-        localStorage.removeItem('deriv_account');
-        localStorage.removeItem('deriv_accounts');
-        localStorage.removeItem('deriv_account_type');
-        localStorage.removeItem('deriv_balance');
-        localStorage.removeItem('deriv_account_code');
-        localStorage.removeItem('deriv_active_login_id');
-
-        setToken('');
-        setIsLoggedIn(false);
-        setBalance(null);
-        setAccountType(null);
-        setAccountCode('');
-        setAccounts([]);
-        setActiveLoginId(null);
-        setBalanceSubscribed(false);
-        setConnectionStatus('disconnected');
-        console.log('[v0] ✅ Logged out successfully');
-        loginWithDeriv();
-    };
-
-    const switchAccount = (loginId: string) => {
-        if (typeof window === 'undefined') return;
-
-        console.log('[v0] 🔄 Switching to account:', loginId);
-
-        const storedAccounts = JSON.parse(localStorage.getItem('deriv_accounts') || '[]');
-        const accountInfo = storedAccounts.find(acc => acc.id === loginId);
-        const apiToken = accountInfo ? accountInfo.token : localStorage.getItem('deriv_api_token');
-
-        if (!apiToken) {
-            console.error(`[v0] ❌ No token found for account ${loginId}`);
-            logout();
-            return;
-        }
-
-        localStorage.setItem('deriv_api_token', apiToken);
-        setToken(apiToken);
-
-        connectWithToken(apiToken);
-    };
-
     return {
-        token,
         isLoggedIn,
-        isAuthenticated: isLoggedIn,
-        loginWithDeriv,
-        logout,
+        token,
         balance,
         accountType,
         accountCode,
         accounts,
-        switchAccount,
         activeLoginId,
         connectionStatus,
+        loginWithDeriv,
+        switchAccount,
+        logout,
     };
 }
