@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Localize, localize } from '@deriv-com/translations';
 import { LegacyLoaderStartIcon, LegacyPlus1pxIcon } from '@deriv/quill-icons/Legacy';
@@ -12,6 +12,7 @@ const FreeBotPage = observer(() => {
     const { free_bot_store } = useStore();
     const { free_bot_strategies, loadFreeBotStrategy, uploadFreeBotFile, is_uploading } = free_bot_store;
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const [loading_bot_id, setLoadingBotId] = useState<string | null>(null);
 
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -20,6 +21,15 @@ const FreeBotPage = observer(() => {
             if (fileInputRef.current) {
                 fileInputRef.current.value = '';
             }
+        }
+    };
+
+    const handleLoadBot = async (strategy: any) => {
+        setLoadingBotId(strategy.id);
+        try {
+            await loadFreeBotStrategy(strategy);
+        } finally {
+            setLoadingBotId(null);
         }
     };
 
@@ -60,11 +70,12 @@ const FreeBotPage = observer(() => {
                                             </div>
                                         </div>
                                         <Button
-                                            text={localize('Load Bot')}
-                                            onClick={() => loadFreeBotStrategy(strategy)}
+                                            text={loading_bot_id === strategy.id ? localize('Loading...') : localize('Load Bot')}
+                                            onClick={() => handleLoadBot(strategy)}
                                             primary
                                             has_effect
                                             className='bot-item__button'
+                                            disabled={loading_bot_id === strategy.id}
                                         />
                                     </div>
                                 ))}
@@ -99,11 +110,12 @@ const FreeBotPage = observer(() => {
                                             </div>
                                         </div>
                                         <Button
-                                            text={localize('Load Bot')}
-                                            onClick={() => loadFreeBotStrategy(strategy)}
+                                            text={loading_bot_id === strategy.id ? localize('Loading...') : localize('Load Bot')}
+                                            onClick={() => handleLoadBot(strategy)}
                                             primary
                                             has_effect
                                             className='bot-item__button'
+                                            disabled={loading_bot_id === strategy.id}
                                         />
                                     </div>
                                 ))}

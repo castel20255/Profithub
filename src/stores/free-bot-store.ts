@@ -91,20 +91,33 @@ export default class FreeBotStore {
             // Navigate to Bot Builder tab (index 1)
             this.root_store.dashboard.setActiveTab(1);
 
+            // Wait a moment for the tab to switch and workspace to be ready
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            const blocklyWorkspace = (window as any).Blockly?.derivWorkspace;
+            
+            if (!blocklyWorkspace) {
+                console.error('Blockly workspace not found. Cannot load bot strategy.');
+                throw new Error('Blockly workspace not initialized');
+            }
+
             // Load the bot XML into the workspace
-            await load({
+            const result = await load({
                 block_string: strategy.xml,
                 file_name: strategy.name,
-                workspace: (window as any).Blockly?.derivWorkspace,
+                workspace: blocklyWorkspace,
                 from: save_types.UNSAVED,
                 drop_event: {},
                 strategy_id: strategy.id,
                 showIncompatibleStrategyDialog: false,
             });
 
-            console.log(`Successfully loaded bot: ${strategy.name}`);
+            console.log(`Successfully loaded bot: ${strategy.name}`, result);
         } catch (error) {
             console.error('Error loading strategy:', error);
+            // Show user-friendly error notification
+            const errorMessage = error instanceof Error ? error.message : 'Failed to load bot strategy';
+            console.error(`Failed to load bot "${strategy.name}": ${errorMessage}`);
         }
     };
 
