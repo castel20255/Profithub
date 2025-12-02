@@ -69,71 +69,44 @@ const useTMB = (): UseTMBReturn => {
 
     const getActiveSessions = useCallback(async (): Promise<TMBWebsocketTokens | undefined> => {
         try {
-            const configServerUrl = localStorage.getItem('config.server_url');
-            if (configServerUrl) {
-                const valid_server_urls = [
-                    'green.derivws.com',
-                    'red.derivws.com',
-                    'blue.derivws.com',
-                    'canary.derivws.com',
-                ];
-
-                let sessionsUrl: string;
-                // Special case: if config.server_url is one of the production WebSocket servers
-                if (valid_server_urls.includes(configServerUrl)) {
-                    const hostname = window.location.hostname;
-                    sessionsUrl = 'https://oauth.deriv.com/oauth2/sessions/active';
-                    console.log('Using production OAuth server for WebSocket config:', sessionsUrl);
-                    if (hostname.includes('.deriv.me')) {
-                        sessionsUrl = 'https://oauth.deriv.me/oauth2/sessions/active';
-                    } else if (hostname.includes('.deriv.be')) {
-                        sessionsUrl = 'https://oauth.deriv.be/oauth2/sessions/active';
-                    }
-                } else {
-                    // Ensure the config server URL has the proper protocol
-                    const serverUrl = configServerUrl.startsWith('http')
-                        ? configServerUrl
-                        : `https://${configServerUrl}`;
-                    sessionsUrl = `${serverUrl}/oauth2/sessions/active`;
-                    console.log('Using config.server_url:', sessionsUrl);
-                }
-
-                // Build the original sessions URL for reference
-                const originalUrl = sessionsUrl;
-                // Use a Vercel serverless function to proxy the request and avoid CORS issues
-                const proxyUrl = `/api/active-sessions?url=${encodeURIComponent(originalUrl)}`;
-                const response = await fetch(proxyUrl, {
-                    method: 'GET',
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                        Cookie: document.cookie,
-                    },
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-
-                const result = await response.json();
-                console.log(`[TMB] Making sessions/active request to: ${sessionsUrl}`);
-                return result as TMBWebsocketTokens;
-            }
-
             const hostname = window.location.hostname;
             let sessionsUrl = 'https://oauth.deriv.com/oauth2/sessions/active';
+
+            // Handle specific domains
             if (hostname.includes('.deriv.me')) {
                 sessionsUrl = 'https://oauth.deriv.me/oauth2/sessions/active';
             } else if (hostname.includes('.deriv.be')) {
                 sessionsUrl = 'https://oauth.deriv.be/oauth2/sessions/active';
+            } else {
+                // Check if we have a custom server URL in config
+                const configServerUrl = localStorage.getItem('config.server_url');
+                if (configServerUrl) {
+                    const valid_server_urls = [
+                        'green.derivws.com',
+                        'red.derivws.com',
+                        'blue.derivws.com',
+                        'canary.derivws.com',
+                    ];
+
+                    if (!valid_server_urls.includes(configServerUrl)) {
+                        const serverUrl = configServerUrl.startsWith('http')
+                            ? configServerUrl
+                            : `https://${configServerUrl}`;
+                        sessionsUrl = `${serverUrl}/oauth2/sessions/active`;
+                        console.log('Using config.server_url:', sessionsUrl);
+                    }
+                }
             }
 
-            const response = await fetch(sessionsUrl, {
+            // Always use the proxy to avoid CORS issues
+            const proxyUrl = `/api/active-sessions?url=${encodeURIComponent(sessionsUrl)}`;
+
+            const response = await fetch(proxyUrl, {
                 method: 'GET',
-                credentials: 'include',
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json',
+                    Cookie: document.cookie,
                 },
             });
 
@@ -142,6 +115,7 @@ const useTMB = (): UseTMBReturn => {
             }
 
             const result = await response.json();
+            console.log(`[TMB] Active sessions request successful via proxy`);
             return result as TMBWebsocketTokens;
         } catch (error) {
             console.error('Failed to get active sessions:', error);

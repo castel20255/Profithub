@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { DERIV_CONFIG } from '@/profit-hub/lib/deriv-config';
+import { getAppId } from '@/profit-hub/lib/deriv-config';
 
 interface Balance {
     amount: number;
@@ -46,7 +46,7 @@ export function useDerivAuth() {
         if (typeof window === 'undefined') return;
 
         const redirectUri = encodeURIComponent(window.location.href.split('?')[0]);
-        const oauthUrl = `https://oauth.deriv.com/oauth2/authorize?app_id=${DERIV_CONFIG.APP_ID}&redirect_uri=${redirectUri}`;
+        const oauthUrl = `https://oauth.deriv.com/oauth2/authorize?app_id=${getAppId()}&redirect_uri=${redirectUri}`;
 
         console.log('[v0] 🔐 Initiating OAuth login...');
         window.location.href = oauthUrl;
@@ -127,8 +127,8 @@ export function useDerivAuth() {
         }
 
         setConnectionStatus('connecting');
-        console.log('[v0] 🔌 Connecting to Deriv WebSocket with app_id:', DERIV_CONFIG.APP_ID);
-        const ws = new WebSocket(`wss://ws.derivws.com/websockets/v3?app_id=${DERIV_CONFIG.APP_ID}`);
+        console.log('[v0] 🔌 Connecting to Deriv WebSocket with app_id:', getAppId());
+        const ws = new WebSocket(`wss://ws.derivws.com/websockets/v3?app_id=${getAppId()}`);
 
         ws.onopen = () => {
             console.log('[v0] ✅ WebSocket connected, sending authorization...');

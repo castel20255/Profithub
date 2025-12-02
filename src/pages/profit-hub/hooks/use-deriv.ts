@@ -5,7 +5,7 @@ import { DerivWebSocket, type DerivSymbol, type ConnectionLog } from '@/profit-h
 import { AnalysisEngine, type TickData, type AnalysisResult, type Signal } from '@/profit-hub/lib/analysis-engine';
 import { AIPredictor, type PredictionResult } from '@/profit-hub/lib/ai-predictor';
 import { useDerivAuth } from '@/profit-hub/hooks/use-deriv-auth';
-import { DERIV_CONFIG } from '@/profit-hub/lib/deriv-config';
+import { getAppId } from '@/profit-hub/lib/deriv-config';
 
 export function useDeriv(initialSymbol = 'R_100', initialMaxTicks = 100) {
     const { token } = useDerivAuth();
@@ -33,7 +33,7 @@ export function useDeriv(initialSymbol = 'R_100', initialMaxTicks = 100) {
     useEffect(() => {
         if (typeof window === 'undefined') return;
 
-        wsRef.current = new DerivWebSocket(DERIV_CONFIG.APP_ID, token);
+        wsRef.current = new DerivWebSocket(getAppId(), token);
         engineRef.current = new AnalysisEngine(maxTicks);
         predictorRef.current = new AIPredictor();
 

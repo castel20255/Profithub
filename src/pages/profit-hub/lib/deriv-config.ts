@@ -13,8 +13,18 @@
 export const DERIV_APP_ID = 106629;
 export const DERIV_REDIRECT_URL = typeof window !== 'undefined' ? window.location.origin : '';
 
+export const getAppId = () => {
+    if (typeof window === 'undefined') return DERIV_APP_ID;
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        return 61554; // Test App ID for localhost
+    }
+    return DERIV_APP_ID;
+};
+
 export const DERIV_CONFIG = {
-    APP_ID: DERIV_APP_ID,
+    get APP_ID() {
+        return getAppId();
+    },
     REDIRECT_URL: DERIV_REDIRECT_URL,
 } as const;
 
