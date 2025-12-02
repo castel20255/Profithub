@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { getAppId } from '@/profit-hub/lib/deriv-config';
+import { getSocketURL } from '@/components/shared';
+
 
 interface Balance {
     amount: number;
@@ -127,8 +129,10 @@ export function useDerivAuth() {
         }
 
         setConnectionStatus('connecting');
-        console.log('[v0] 🔌 Connecting to Deriv WebSocket with app_id:', getAppId());
-        const ws = new WebSocket(`wss://ws.derivws.com/websockets/v3?app_id=${getAppId()}`);
+        const socketServer = typeof window !== 'undefined' ? getSocketURL() : 'ws.derivws.com';
+        const appId = getAppId();
+        console.log('[v0] 🔌 Connecting to Deriv WebSocket:', socketServer, 'app_id:', appId);
+        const ws = new WebSocket(`wss://${socketServer}/websockets/v3?app_id=${appId}`);
 
         ws.onopen = () => {
             console.log('[v0] ✅ WebSocket connected, sending authorization...');
