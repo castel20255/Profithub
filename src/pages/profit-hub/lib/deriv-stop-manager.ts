@@ -1,48 +1,48 @@
 export class DerivStopManager {
-  private wsConnections: WebSocket[] = []
-  private activeTradeIds: Set<string> = new Set()
-  private isTrading = false
+    private wsConnections: WebSocket[] = [];
+    private activeTradeIds: Set<string> = new Set();
+    private isTrading = false;
 
-  registerConnection(ws: WebSocket) {
-    this.wsConnections.push(ws)
-  }
-
-  registerTrade(tradeId: string) {
-    this.activeTradeIds.add(tradeId)
-  }
-
-  async stopAll() {
-    console.log("[v0] 🛑 Stopping all trades and connections...")
-
-    // Send forget_all to all active connections
-    for (const ws of this.wsConnections) {
-      if (ws.readyState === WebSocket.OPEN) {
-        ws.send(
-          JSON.stringify({
-            forget_all: ["ticks", "proposal_open_contract", "balance", "transaction"],
-          }),
-        )
-      }
+    registerConnection(ws: WebSocket) {
+        this.wsConnections.push(ws);
     }
 
-    // Clear all active trades
-    this.activeTradeIds.clear()
-    this.isTrading = false
+    registerTrade(tradeId: string) {
+        this.activeTradeIds.add(tradeId);
+    }
 
-    console.log("[v0] ✅ All trades and connections stopped")
-  }
+    async stopAll() {
+        console.log('[v0] 🛑 Stopping all trades and connections...');
 
-  setTrading(trading: boolean) {
-    this.isTrading = trading
-  }
+        // Send forget_all to all active connections
+        for (const ws of this.wsConnections) {
+            if (ws.readyState === WebSocket.OPEN) {
+                ws.send(
+                    JSON.stringify({
+                        forget_all: ['ticks', 'proposal_open_contract', 'balance', 'transaction'],
+                    })
+                );
+            }
+        }
 
-  getActiveTradeCount() {
-    return this.activeTradeIds.size
-  }
+        // Clear all active trades
+        this.activeTradeIds.clear();
+        this.isTrading = false;
 
-  isCurrentlyTrading() {
-    return this.isTrading
-  }
+        console.log('[v0] ✅ All trades and connections stopped');
+    }
+
+    setTrading(trading: boolean) {
+        this.isTrading = trading;
+    }
+
+    getActiveTradeCount() {
+        return this.activeTradeIds.size;
+    }
+
+    isCurrentlyTrading() {
+        return this.isTrading;
+    }
 }
 
-export const stopManager = new DerivStopManager()
+export const stopManager = new DerivStopManager();

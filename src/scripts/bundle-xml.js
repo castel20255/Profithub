@@ -18,7 +18,7 @@ function readXMLFiles(dir, isPremium) {
                 id,
                 name,
                 xml: JSON.stringify(xml),
-                isPremium
+                isPremium,
             };
         });
 }

@@ -1,68 +1,68 @@
-"use client"
+'use client';
 
-import React from "react"
-import { TabsList } from "@/components/ui/tabs"
-import { Button } from "@/components/ui/button"
-import { ChevronDown } from "lucide-react"
+import React from 'react';
+import { TabsList } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { ChevronDown } from 'lucide-react';
 // import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu" // Commented out for now as we don't have dropdown-menu yet
 
 interface ResponsiveTabsProps {
-  children: React.ReactNode
-  theme?: "light" | "dark"
+    children: React.ReactNode;
+    theme?: 'light' | 'dark';
 }
 
-export function ResponsiveTabs({ children, theme = "dark" }: ResponsiveTabsProps) {
-  const [isDropdownOpen, setIsDropdownOpen] = React.useState(false)
-  const [selectedTab, setSelectedTab] = React.useState<string>("dashboard")
+export function ResponsiveTabs({ children, theme = 'dark' }: ResponsiveTabsProps) {
+    const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
+    const [selectedTab, setSelectedTab] = React.useState<string>('dashboard');
 
-  React.useEffect(() => {
-    const updateActiveTab = () => {
-      const activeTrigger = document.querySelector('[role="tab"][data-state="active"]')
-      if (activeTrigger) {
-        const tabValue = activeTrigger.getAttribute("value")
-        if (tabValue && tabValue !== selectedTab) {
-          setSelectedTab(tabValue)
+    React.useEffect(() => {
+        const updateActiveTab = () => {
+            const activeTrigger = document.querySelector('[role="tab"][data-state="active"]');
+            if (activeTrigger) {
+                const tabValue = activeTrigger.getAttribute('value');
+                if (tabValue && tabValue !== selectedTab) {
+                    setSelectedTab(tabValue);
+                }
+            }
+        };
+
+        updateActiveTab();
+
+        const observer = new MutationObserver(updateActiveTab);
+        const tabsList = document.querySelector('[role="tablist"]');
+        if (tabsList) {
+            observer.observe(tabsList, {
+                attributes: true,
+                subtree: true,
+                attributeFilter: ['data-state'],
+            });
         }
-      }
-    }
 
-    updateActiveTab()
+        return () => observer.disconnect();
+    }, [selectedTab]);
 
-    const observer = new MutationObserver(updateActiveTab)
-    const tabsList = document.querySelector('[role="tablist"]')
-    if (tabsList) {
-      observer.observe(tabsList, {
-        attributes: true,
-        subtree: true,
-        attributeFilter: ["data-state"],
-      })
-    }
+    const handleTabClick = (tabValue: string) => {
+        setSelectedTab(tabValue);
+        setIsDropdownOpen(false);
 
-    return () => observer.disconnect()
-  }, [selectedTab])
+        const tabTrigger = document.querySelector(`[role="tab"][value="${tabValue}"]`) as HTMLElement;
+        if (tabTrigger) {
+            tabTrigger.click();
+        }
+    };
 
-  const handleTabClick = (tabValue: string) => {
-    setSelectedTab(tabValue)
-    setIsDropdownOpen(false)
+    const getTabLabel = (value: string) => {
+        const child = React.Children.toArray(children).find(c => React.isValidElement(c) && c.props.value === value);
+        if (React.isValidElement(child)) {
+            return child.props.children || value.replace(/-/g, ' ');
+        }
+        return value.replace(/-/g, ' ');
+    };
 
-    const tabTrigger = document.querySelector(`[role="tab"][value="${tabValue}"]`) as HTMLElement
-    if (tabTrigger) {
-      tabTrigger.click()
-    }
-  }
-
-  const getTabLabel = (value: string) => {
-    const child = React.Children.toArray(children).find((c) => React.isValidElement(c) && c.props.value === value)
-    if (React.isValidElement(child)) {
-      return child.props.children || value.replace(/-/g, " ")
-    }
-    return value.replace(/-/g, " ")
-  }
-
-  return (
-    <>
-      <div className="md:hidden px-2 py-2">
-        {/* DropdownMenu implementation commented out until we have the component
+    return (
+        <>
+            <div className='md:hidden px-2 py-2'>
+                {/* DropdownMenu implementation commented out until we have the component
         <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
           <DropdownMenuTrigger asChild>
             <Button
@@ -108,14 +108,15 @@ export function ResponsiveTabs({ children, theme = "dark" }: ResponsiveTabsProps
           </DropdownMenuContent>
         </DropdownMenu>
         */}
-      </div>
+            </div>
 
-      <TabsList
-        className={`hidden md:flex w-full justify-start bg-transparent border-0 h-auto p-0 gap-0 overflow-x-auto flex-nowrap scrollbar-thin scrollbar-thumb-green-500/50 scrollbar-track-transparent ${theme === "dark" ? "border-green-500/20" : "border-gray-200"
-          }`}
-      >
-        {children}
-      </TabsList>
-    </>
-  )
+            <TabsList
+                className={`hidden md:flex w-full justify-start bg-transparent border-0 h-auto p-0 gap-0 overflow-x-auto flex-nowrap scrollbar-thin scrollbar-thumb-green-500/50 scrollbar-track-transparent ${
+                    theme === 'dark' ? 'border-green-500/20' : 'border-gray-200'
+                }`}
+            >
+                {children}
+            </TabsList>
+        </>
+    );
 }

@@ -35,14 +35,14 @@ const FreeBotPage = observer(() => {
             </div>
 
             <div className='free-bot-page__content'>
-                <Tabs defaultValue="normal">
+                <Tabs defaultValue='normal'>
                     <TabsList>
-                        <TabsTrigger value="normal">{localize('Normal Bots')}</TabsTrigger>
-                        <TabsTrigger value="premium">{localize('Premium Bots')}</TabsTrigger>
-                        <TabsTrigger value="import">{localize('Import Bot')}</TabsTrigger>
+                        <TabsTrigger value='normal'>{localize('Normal Bots')}</TabsTrigger>
+                        <TabsTrigger value='premium'>{localize('Premium Bots')}</TabsTrigger>
+                        <TabsTrigger value='import'>{localize('Import Bot')}</TabsTrigger>
                     </TabsList>
 
-                    <TabsContent value="normal">
+                    <TabsContent value='normal'>
                         <div className='free-bot-page__bot-list'>
                             {free_bot_strategies
                                 .filter(s => !s.isPremium)
@@ -78,7 +78,7 @@ const FreeBotPage = observer(() => {
                         </div>
                     </TabsContent>
 
-                    <TabsContent value="premium">
+                    <TabsContent value='premium'>
                         <div className='free-bot-page__bot-list'>
                             {free_bot_strategies
                                 .filter(s => s.isPremium)
@@ -117,7 +117,7 @@ const FreeBotPage = observer(() => {
                         </div>
                     </TabsContent>
 
-                    <TabsContent value="import">
+                    <TabsContent value='import'>
                         <div className='free-bot-page__import'>
                             <input
                                 type='file'

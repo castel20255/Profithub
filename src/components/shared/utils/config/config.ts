@@ -124,8 +124,9 @@ export const checkAndSetEndpointFromUrl = () => {
             const params = url_params.toString();
             const hash = location.hash;
 
-            location.href = `${location.protocol}//${location.hostname}${location.pathname}${params ? `?${params}` : ''
-                }${hash || ''}`;
+            location.href = `${location.protocol}//${location.hostname}${location.pathname}${
+                params ? `?${params}` : ''
+            }${hash || ''}`;
 
             return true;
         }

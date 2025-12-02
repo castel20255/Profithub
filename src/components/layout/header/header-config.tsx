@@ -60,7 +60,7 @@ export const platformsConfig: PlatformsConfig[] = [
     {
         active: false,
         buttonIcon: <SmarttraderLogo height='32px' />,
-        description: localize('Trade the world\'s markets with our popular user-friendly platform.'),
+        description: localize("Trade the world's markets with our popular user-friendly platform."),
         href: standalone_routes.smarttrader,
         icon: <SmarttraderLogo height='32px' />,
         showInEU: true,

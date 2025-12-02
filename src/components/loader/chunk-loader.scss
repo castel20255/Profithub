@@ -14,7 +14,7 @@
     &__title {
         font-size: 3.2rem;
         font-weight: 700;
-        background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 50%, #6D28D9 100%);
+        background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 50%, #6d28d9 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -34,7 +34,7 @@
     &__progress-fill {
         height: 100%;
         width: 0%;
-        background: linear-gradient(90deg, #8B5CF6 0%, #7C3AED 50%, #6D28D9 100%);
+        background: linear-gradient(90deg, #8b5cf6 0%, #7c3aed 50%, #6d28d9 100%);
         border-radius: 10px;
         animation: progressBar 2s ease-in-out infinite;
         box-shadow: 0 0 20px rgba(139, 92, 246, 0.6);

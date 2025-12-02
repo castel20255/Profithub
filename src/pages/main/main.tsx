@@ -67,13 +67,7 @@ const AppWrapper = observer(() => {
     const { clear } = summary_card;
     const { DASHBOARD, BOT_BUILDER } = DBOT_TABS;
     const init_render = React.useRef(true);
-    const hash = [
-        'dashboard',
-        'bot_builder',
-        'chart',
-        'tutorial',
-        'free_bot',
-    ];
+    const hash = ['dashboard', 'bot_builder', 'chart', 'tutorial', 'free_bot'];
     const { isDesktop } = useDevice();
     const location = useLocation();
     const navigate = useNavigate();
@@ -255,10 +249,10 @@ const AppWrapper = observer(() => {
                             redirectCallbackUri: `${window.location.origin}/callback`,
                             ...(query_param_currency
                                 ? {
-                                    state: {
-                                        account: query_param_currency,
-                                    },
-                                }
+                                      state: {
+                                          account: query_param_currency,
+                                      },
+                                  }
                                 : {}),
                         });
                     } catch (err) {

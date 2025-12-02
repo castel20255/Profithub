@@ -157,10 +157,10 @@ const AppHeader = observer(({ isAuthenticating }: TAppHeaderProps) => {
                                             redirectCallbackUri: `${window.location.origin}/callback`,
                                             ...(query_param_currency
                                                 ? {
-                                                    state: {
-                                                        account: query_param_currency,
-                                                    },
-                                                }
+                                                      state: {
+                                                          account: query_param_currency,
+                                                      },
+                                                  }
                                                 : {}),
                                         });
                                     } catch (err) {

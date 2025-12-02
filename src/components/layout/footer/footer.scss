@@ -20,16 +20,15 @@
         padding: 0.8rem;
         transition: all 0.2s ease;
 
-        svg>g>path,
-        svg>path {
+        svg > g > path,
+        svg > path {
             fill: var(--text-prominent);
             transition: fill 0.2s ease;
         }
 
         &:hover {
-
-            svg>g>path,
-            svg>path {
+            svg > g > path,
+            svg > path {
                 fill: var(--brand-purple-1);
             }
         }

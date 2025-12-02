@@ -76,10 +76,7 @@ const ProfitHubLoader = () => {
                 {/* Progress Bar */}
                 <div className='profit-hub-loader__progress-container'>
                     <div className='profit-hub-loader__progress-bar'>
-                        <div
-                            className='profit-hub-loader__progress-fill'
-                            style={{ width: `${progress}%` }}
-                        />
+                        <div className='profit-hub-loader__progress-fill' style={{ width: `${progress}%` }} />
                     </div>
                     <div className='profit-hub-loader__progress-percentage'>{progress}%</div>
                 </div>
@@ -91,8 +88,9 @@ const ProfitHubLoader = () => {
                         {steps.map((step, index) => (
                             <div
                                 key={index}
-                                className={`profit-hub-loader__step ${index <= currentStep ? 'profit-hub-loader__step--active' : ''
-                                    } ${index < currentStep ? 'profit-hub-loader__step--complete' : ''}`}
+                                className={`profit-hub-loader__step ${
+                                    index <= currentStep ? 'profit-hub-loader__step--active' : ''
+                                } ${index < currentStep ? 'profit-hub-loader__step--complete' : ''}`}
                             >
                                 <div className='profit-hub-loader__step-icon'>
                                     {index < currentStep ? (
@@ -109,7 +107,9 @@ const ProfitHubLoader = () => {
                                     )}
                                 </div>
                                 <span className='profit-hub-loader__step-text'>{step}</span>
-                                {index === currentStep && <span className='profit-hub-loader__step-loading'>Loading...</span>}
+                                {index === currentStep && (
+                                    <span className='profit-hub-loader__step-loading'>Loading...</span>
+                                )}
                             </div>
                         ))}
                     </div>

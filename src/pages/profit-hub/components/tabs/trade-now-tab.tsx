@@ -1,5 +1,5 @@
-"use client"
+'use client';
 
-import { TradingTab } from "./trading-tab"
+import { TradingTab } from './trading-tab';
 
-export { TradingTab as TradeNowTab }
+export { TradingTab as TradeNowTab };

@@ -98,12 +98,16 @@ const useTMB = (): UseTMBReturn => {
                     console.log('Using config.server_url:', sessionsUrl);
                 }
 
-                const response = await fetch(sessionsUrl, {
+                // Build the original sessions URL for reference
+                const originalUrl = sessionsUrl;
+                // Use a Vercel serverless function to proxy the request and avoid CORS issues
+                const proxyUrl = `/api/active-sessions?url=${encodeURIComponent(originalUrl)}`;
+                const response = await fetch(proxyUrl, {
                     method: 'GET',
-                    credentials: 'include',
                     headers: {
                         Accept: 'application/json',
                         'Content-Type': 'application/json',
+                        Cookie: document.cookie,
                     },
                 });
 
