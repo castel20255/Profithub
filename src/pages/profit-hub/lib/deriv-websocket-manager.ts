@@ -2,7 +2,7 @@
 
 import { extractLastDigit } from '@/lib/deriv-markets';
 
-const APP_ID = '106629';
+const APP_ID = '113536';
 
 type MessageHandler = (message: any) => void;
 
@@ -69,7 +69,7 @@ export class DerivWebSocketManager {
             }, 10000);
 
             try {
-                const wsUrl = `wss://ws.derivws.com/websockets/v3?app_id=106629`;
+                const wsUrl = `wss://ws.derivws.com/websockets/v3?app_id=${APP_ID}`;
                 console.log('[v0] Connecting to Deriv WebSocket:', wsUrl);
 
                 this.ws = new WebSocket(wsUrl);

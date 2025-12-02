@@ -104,7 +104,7 @@ export function DerivResources({ theme = 'dark' }: DerivResourcesProps) {
                             <ul className={`text-sm space-y-1 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
                                 <li>• All platforms are integrated via iframe embedding with OAuth authentication</li>
                                 <li>• WebSocket API (deriv-api) is used for real-time data and account management</li>
-                                <li>• App ID 106629 is configured for this application</li>
+                                        <li>• App ID 113536 is configured for this application</li>
                                 <li>
                                     • Derivatives engine is optional unless implementing custom backend trading logic
                                 </li>

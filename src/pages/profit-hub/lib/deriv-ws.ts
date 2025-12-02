@@ -8,9 +8,9 @@ export class DerivWS {
     private messageHandlers: Map<string, (data: any) => void> = new Map();
     private subscriptions: Map<string, any> = new Map();
 
-    constructor(appId = '106629') {
-        this.appId = '106629';
-        this.url = `wss://ws.derivws.com/websockets/v3?app_id=106629`;
+    constructor(appId = '113536') {
+        this.appId = String(appId || '113536');
+        this.url = `wss://ws.derivws.com/websockets/v3?app_id=${this.appId}`;
     }
 
     connect(): Promise<void> {

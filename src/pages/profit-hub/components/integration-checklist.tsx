@@ -74,7 +74,7 @@ export function IntegrationChecklist({
                 id: 'deriv-oauth',
                 category: 'Deriv Authentication',
                 name: 'OAuth Login System',
-                description: 'Deriv OAuth authentication (App ID: 106629)',
+                description: 'Deriv OAuth authentication (App ID: 113536)',
                 status: isLoggedIn ? 'pass' : 'warning',
                 details: isLoggedIn ? 'User authenticated' : "Not logged in - Click 'Login with Deriv'",
             },

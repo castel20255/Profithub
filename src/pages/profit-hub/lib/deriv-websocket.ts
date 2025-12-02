@@ -11,7 +11,7 @@ export class DerivWebSocket {
     private appId: string;
 
     constructor(appId?: string | number, token?: string) {
-        this.appId = appId ? String(appId) : '106629';
+        this.appId = appId ? String(appId) : '113536';
         this.token = token || null;
     }
 
@@ -23,7 +23,7 @@ export class DerivWebSocket {
         return new Promise((resolve, reject) => {
             try {
                 this.isIntentionallyClosed = false;
-                const url = `wss://ws.derivws.com/websockets/v3?app_id=106629`;
+                const url = `wss://ws.derivws.com/websockets/v3?app_id=${this.appId}`;
                 console.log('[v0] Initiating Deriv API connection:', url);
 
                 this.notifyConnectionStatus('reconnecting');

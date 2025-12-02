@@ -17,6 +17,7 @@ import { Localize, useTranslations } from '@deriv-com/translations';
 import { Header, useDevice, Wrapper } from '@deriv-com/ui';
 import { Tooltip } from '@deriv-com/ui';
 import { AppLogo } from '../app-logo';
+import { Twitter, Send } from 'lucide-react';
 import AccountsInfoLoader from './account-info-loader';
 import AccountSwitcher from './account-switcher';
 import MenuItems from './menu-items';
@@ -187,7 +188,39 @@ const AppHeader = observer(({ isAuthenticating }: TAppHeaderProps) => {
             <Wrapper variant='left'>
                 <div className='header__logo-wrapper'>
                     <AppLogo />
-                    <span className='header__brand-name'>ProfitHub</span>
+                    <span className='header__brand-name'>PROFITHUB</span>
+
+                    <div className='header__socials'>
+                        <a
+                            className='social-btn social-btn--whatsapp'
+                            href='https://wa.me/your-number'
+                            target='_blank'
+                            rel='noopener noreferrer'
+                            aria-label='WhatsApp'
+                        >
+                            W
+                        </a>
+
+                        <a
+                            className='social-btn social-btn--x'
+                            href='https://twitter.com/yourhandle'
+                            target='_blank'
+                            rel='noopener noreferrer'
+                            aria-label='X (Twitter)'
+                        >
+                            <Twitter size={14} />
+                        </a>
+
+                        <a
+                            className='social-btn social-btn--telegram'
+                            href='https://t.me/yourhandle'
+                            target='_blank'
+                            rel='noopener noreferrer'
+                            aria-label='Telegram'
+                        >
+                            <Send size={14} />
+                        </a>
+                    </div>
                 </div>
                 {/* <MobileMenu /> */}
                 {isDesktop && <MenuItems />}

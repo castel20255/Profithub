@@ -101,7 +101,7 @@ export class DerivFastTradeEngine {
     private onTradeResult: ((result: TradeResult) => void) | null = null;
     private onStatusChange: ((status: string) => void) | null = null;
 
-    constructor(appId = '106629') {
+    constructor(appId = '113536') {
         this.appId = appId;
     }
 
